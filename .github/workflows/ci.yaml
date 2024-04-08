@@ -13,11 +13,11 @@ on:
       - "main"
   workflow_dispatch:
 jobs:
-  demo-web:
+  front-test:
     uses: PeeR-CESI/pipeline-templates/.github/workflows/docker-build-app.yaml@main
     with:
       workingdir: .
-      img-name: test
+      img-name: front-test
       registry-username: ${{ vars.DOCKER_HUB_USER }}
     secrets:
       git-token: ${{ secrets.PAT }}

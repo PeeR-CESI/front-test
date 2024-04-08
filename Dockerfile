@@ -1,25 +1,30 @@
-ARG BASE_REGISTRY
+# Étape de construction
+# Utilisez une version spécifique de node pour éviter tout problème de compatibilité
+FROM node:16 as build-stage
 
-FROM ${BASE_REGISTRY}python:3.12-alpine3.19 as base
+# Définir le répertoire de travail dans l'image
+WORKDIR /app
 
-ENV TZ="Europe/Paris"
+# Copier les fichiers package.json et package-lock.json
+COPY package*.json ./
 
-RUN --mount=type=cache,target=/var/cache/apk \
-    apk update --no-cache && \
-    apk upgrade --no-cache && \
-    apk add --no-cache --update \
-    git \
-    curl \
-    bash \
-    jq \
-    yq \
-    moreutils \
-    util-linux \
-    ca-certificates \
-    tzdata && \
-    cp /usr/share/zoneinfo/${TZ} /etc/localtime
+# Installer les dépendances du projet
+RUN npm install
 
-RUN --mount=type=cache,target=/var/cache/apk \
-    apk add --no-cache --update --repository="http://dl-cdn.alpinelinux.org/alpine/edge/community" \
-    helm \
-    github-cli
+# Copier les fichiers et dossiers du projet dans l'image
+COPY . .
+
+# Construire l'application pour la production
+RUN npm run build
+
+# Étape de mise en service
+FROM nginx:stable-alpine as production-stage
+
+# Copier les artefacts de build dans le dossier de serve de Nginx
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+
+# Exposer le port 80 pour accéder à l'application
+EXPOSE 80
+
+# Lancer Nginx
+CMD ["nginx", "-g", "daemon off;"]
