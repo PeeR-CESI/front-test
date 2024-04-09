@@ -1,5 +1,5 @@
 # Étape de construction
-FROM node:18 as build-stage
+FROM node:21
 
 # Définir le répertoire de travail dans l'image
 WORKDIR /app
@@ -20,7 +20,7 @@ COPY my-vue-app/ ./
 RUN npm run build
 
 # Étape de mise en service
-FROM nginx:stable-alpine as production-stage
+FROM nginx:stable-alpine
 
 # Copier les artefacts de build dans le dossier de serve de Nginx depuis le bon emplacement
 COPY --from=build-stage /app/dist /usr/share/nginx/html
