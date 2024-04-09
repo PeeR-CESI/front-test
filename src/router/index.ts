@@ -52,6 +52,12 @@ const routes: Array<RouteRecordRaw> = [
             }
         },
     },
+    {
+        path: '/service/:service_id',
+        name: 'DisplayService',
+        component: DisplayServiceView,
+        props: true,
+      },
 ];
 
 const router = createRouter({
