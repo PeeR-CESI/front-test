@@ -6,6 +6,8 @@ import ParamPage from '../views/ParamView.vue';
 import CreateServicePage from '../views/CreateServiceView.vue';
 import DisplayServiceView from '../views/DisplayServiceView.vue';
 import ModifyDescriptionServiceView from '../views/ModifyDescriptionServiceView.vue';
+import UserListView from '../views/UserListView.vue';
+import UserDetailsView from '../views/UserDetailsView.vue';
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -63,6 +65,16 @@ const routes: Array<RouteRecordRaw> = [
         name: 'ModifyService',
         component: ModifyDescriptionServiceView,
         props: true,
+    },
+    {
+        path: '/user-list',
+        name: 'UserList',
+        component: UserListView,
+    },
+    {
+        path: '/user-details/:id',
+        name: 'UserDetails',
+        component: UserDetailsView,
     },
 ];
 

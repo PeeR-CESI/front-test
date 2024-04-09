@@ -13,11 +13,19 @@
       <button @click="sendSponsorEmail">Envoyer</button>
       <button @click="showSponsorModal = false">Fermer</button>
     </div>
+    <button @click="goToUserList">Voir les utilisateurs</button>
+    <div class="services-container">
+      <div class="service-card" v-for="service in services" :key="service.nom">
+        <h3>{{ service.nom }}</h3>
+        <p>{{ service.description }}</p>
+        <p class="price">{{ service.price }}</p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue';
+import { defineComponent, computed, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
@@ -25,6 +33,23 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const username = computed(() => localStorage.getItem('username'));
+    const services = ref([]);
+
+    const goToUserList = () => {
+      router.push('/user-list'); // Assurez-vous que le chemin correspond à celui défini dans le router
+    };
+
+    onMounted(async () => {
+      try {
+        const response = await fetch('http://peer.cesi:5010/service/all');
+        if (!response.ok) {
+          throw new Error('Erreur lors de la récupération des services');
+        }
+        services.value = await response.json();
+      } catch (error) {
+        console.error(error);
+      }
+    });
 
     const goToSettings = () => {
       router.push('/parameters');
@@ -59,10 +84,12 @@ export default defineComponent({
 
     return {
       username,
+      services,
       goToSettings,
       showSponsorModal,
       sponsorEmail,
       sendSponsorEmail,
+      goToUserList,
     };
   },
 });
@@ -79,5 +106,26 @@ export default defineComponent({
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.home {
+  padding: 2rem;
+}
+
+.services-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.service-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  width: calc(33.333% - 1rem); /* Ajuster en fonction de la largeur de la carte */
+}
+
+.price {
+  color: green;
+  font-weight: bold;
 }
 </style>
