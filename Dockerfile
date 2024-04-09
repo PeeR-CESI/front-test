@@ -1,5 +1,5 @@
 # Étape de construction
-FROM node:16 as build-stage
+FROM node:18 as build-stage
 
 # Définir le répertoire de travail dans l'image
 WORKDIR /app
@@ -18,6 +18,7 @@ COPY my-vue-app/ ./
 RUN ls -la
 
 # Construire l'application pour la production
+RUN chmod +x node_modules/.bin/*
 RUN npm run build
 
 # Étape de mise en service
