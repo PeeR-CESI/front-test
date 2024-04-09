@@ -83,7 +83,7 @@ export default defineComponent({
         // Redirigez l'utilisateur ou affichez un message, par exemple avec router.push('/quelquepart');
       } catch (error) {
         console.error("Erreur lors de la mise à jour du compte :", error);
-        alert("Erreur lors de la mise à jour du compte : " + error.message); // Informez l'utilisateur de l'erreur.
+        alert("Erreur lors de la mise à jour du compte : " + error); // Informez l'utilisateur de l'erreur.
       }
     };
 
