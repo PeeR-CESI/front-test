@@ -50,27 +50,24 @@ export default defineComponent({
           body: JSON.stringify(credentials.value),
         });
 
-        if (!response.ok) {
-          throw response;
-        }
-
-        const data = await response.json();
-        console.log(data); // Gérez la réussite de la connexion ici
-        // Par exemple, sauvegardez le token et redirigez l'utilisateur
-      } catch (err) {
-        error.value = true;
-
-        if (err instanceof Response) {
-          if (err.status === 404) {
-            errorMessage.value = 'Nom d’utilisateur non trouvé.';
-          } else if (err.status === 401) {
-            errorMessage.value = 'Mot de passe incorrect.';
-          } else {
-            errorMessage.value = 'Erreur lors de la connexion.';
-          }
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Connexion réussie:', data);
+          // Ici, vous devriez enregistrer les tokens et rediriger l'utilisateur.
+          localStorage.setItem('accessToken', data.access_token);
+          localStorage.setItem('refreshToken', data.refresh_token);
+          router.push('/home'); // Redirige vers la page d'accueil.
         } else {
-          errorMessage.value = 'Une erreur inconnue est survenue.';
+          // Gérez les erreurs HTTP ici
+          error.value = true;
+          const errorData = await response.json();
+          errorMessage.value = errorData.message || 'Une erreur est survenue lors de la connexion.';
         }
+      } catch (err) {
+        // Gérez les erreurs de réseau ou autres erreurs inattendues ici
+        console.error('Erreur réseau ou inattendue:', err);
+        error.value = true;
+        errorMessage.value = 'Une erreur réseau ou inconnue est survenue.';
       }
     };
 

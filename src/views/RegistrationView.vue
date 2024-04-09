@@ -19,6 +19,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import router from "../router";
 
 export default defineComponent({
   name: 'InscriptionPage',
@@ -53,15 +54,16 @@ export default defineComponent({
           throw new Error(`Erreur ${response.status}`);
         }
 
-        const data = await response.json();
-        console.log('Utilisateur créé:', data);
+        const userData  = await response.json();
+        console.log('Utilisateur créé:', userData );
+        router.push('/login'); // Redirection vers la page de connexion
 
-        // Gérer la redirection ou autres actions post-création ici
-        // Par exemple : router.push('/login');
       } catch (error) {
         console.error('Erreur:', error);
       }
+
     };
+
 
     return {
       nom,

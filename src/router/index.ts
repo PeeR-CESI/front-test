@@ -1,8 +1,9 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router';
 import InscriptionPage from '../views/RegistrationView.vue'; // Assurez-vous d'importer correctement votre composant d'inscription
-import LoginPage from '../views/LoginView.vue'; // Importez également le composant de connexion si ce n'est déjà fait
+import LoginPage from '../views/LoginView.vue';
+import HomeView from "../views/HomeView.vue"; // Importez également le composant de connexion si ce n'est déjà fait
 
-const routes = [
+const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
         redirect: '/login',
@@ -17,7 +18,19 @@ const routes = [
         name: 'Inscription',
         component: InscriptionPage,
     },
-    // Définissez d'autres routes selon vos besoins
+    {
+        path: '/',
+        name: 'Home',
+        component: HomeView, // Assurez-vous que HomeView est importé correctement
+        beforeEnter: (to, from, next) => {
+            // Vérifiez si l'utilisateur a un token d'accès
+            if (localStorage.getItem('access_token')) {
+                next();
+            } else {
+                next({name: 'Login'}); // Redirige vers la page de connexion si aucun token n'est trouvé
+            }
+        },
+    },
 ];
 
 const router = createRouter({
