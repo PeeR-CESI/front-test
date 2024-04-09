@@ -3,6 +3,7 @@ import InscriptionPage from '../views/RegistrationView.vue';
 import LoginPage from '../views/LoginView.vue';
 import HomePage from "../views/HomeView.vue"; 
 import CreateServicePage from '../views/CreateServiceView.vue';
+import DisplayServiceView from '../views/DisplayServiceView.vue';
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -29,6 +30,12 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Service',
         component: CreateServicePage,
     },
+    {
+        path: '/service/:service_id',
+        name: 'DisplayService',
+        component: DisplayServiceView,
+        props: true,
+      },
 ];
 
 const router = createRouter({

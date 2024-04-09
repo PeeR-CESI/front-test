@@ -48,12 +48,17 @@
             throw new Error(`Erreur ${response.status}`);
           }
   
-          const serviceData = await response.json();
-          console.log('Service créé avec succès:', serviceData);
-          router.push('/some-success-page'); // Redirection vers une page de succès ou d'accueil
+          const result = await response.json();
+          if (response.status === 201) {
+            console.log('Service créé avec succès:', result);
+            window.alert(result.message); // Affiche le message de succès
+            // Stockez le service_id comme souhaité ici. Par exemple, redirigez vers une nouvelle URL contenant le service_id
+            router.push(`/service/${result.service_id}`); // Redirige vers la page d'affichage des détails du service avec l'ID du service
+          }
   
         } catch (error) {
           console.error('Erreur lors de la création du service:', error);
+          window.alert(`Erreur lors de la création du service: ${error.message}`);
         }
       };
   
@@ -68,6 +73,37 @@
   </script>
   
   <style scoped>
-  /* Vos styles ici */
+  /* Styles conservés tels quels */
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  input[type="text"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    align-self: center;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
   </style>
   
