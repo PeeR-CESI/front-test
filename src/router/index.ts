@@ -5,6 +5,7 @@ import HomePage from "../views/HomeView.vue";
 import ParamPage from '../views/ParamView.vue';
 import CreateServicePage from '../views/CreateServiceView.vue';
 import DisplayServiceView from '../views/DisplayServiceView.vue';
+import ModifyDescriptionServiceView from '../views/ModifyDescriptionServiceView.vue';
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -35,11 +36,6 @@ const routes: Array<RouteRecordRaw> = [
         },
     },
     {
-        path: '/service',
-        name: 'Service',
-        component: CreateServicePage,
-    },
-    {
         path: '/parameters',
         name: 'Parameters',
         component: ParamPage,
@@ -52,11 +48,22 @@ const routes: Array<RouteRecordRaw> = [
         },
     },
     {
-        path: '/service/:service_id',
+        path: '/service',
+        name: 'Service',
+        component: CreateServicePage,
+    },
+    {
+        path: '/service/display/:service_id',
         name: 'DisplayService',
         component: DisplayServiceView,
         props: true,
-      },
+    },
+    {
+        path: '/service/modify/:service_id',
+        name: 'ModifyService',
+        component: ModifyDescriptionServiceView,
+        props: true,
+    },
 ];
 
 const router = createRouter({
