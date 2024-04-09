@@ -36,13 +36,19 @@
 import { defineComponent, onMounted, ref, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 
+// Interface pour un avis
+interface Review {
+  rating: number;
+  comment: string;
+}
+
 export default defineComponent({
   name: 'UserDetailsView',
   setup() {
     const route = useRoute();
     const presta = ref('');
     const average_rating = ref(0);
-    const reviews = ref([]);
+    const reviews = ref<Review[]>([]);
     const userId = route.params.id;
 
     const newReview = reactive({
@@ -51,7 +57,6 @@ export default defineComponent({
       presta_id: userId
     });
 
-    // Fonction pour charger les détails et avis de l'utilisateur
     const loadDetails = async () => {
       try {
         const response = await fetch(`http://peer.cesi:5000/review/${userId}`);
@@ -60,23 +65,20 @@ export default defineComponent({
         }
         const data = await response.json();
         presta.value = data.presta;
-        average_rating.value = data.average_rating;
+        average_rating.value = parseFloat(data.average_rating.toFixed(1));
         reviews.value = data.reviews;
       } catch (error) {
         console.error('Erreur lors de la récupération des détails de l’utilisateur:', error);
       }
     };
 
-    // Appel initial pour charger les détails
     onMounted(loadDetails);
 
     const addReview = async () => {
       try {
         const response = await fetch(`http://peer.cesi:5000/review/add`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(newReview),
         });
 
@@ -84,10 +86,8 @@ export default defineComponent({
           throw new Error(`Erreur HTTP : ${response.status}`);
         }
 
-        // Rafraîchir les avis après ajout
         await loadDetails();
 
-        // Réinitialiser le formulaire
         newReview.comment = '';
         newReview.rating = 5;
       } catch (error) {
@@ -95,25 +95,12 @@ export default defineComponent({
       }
     };
 
-    return {
-      presta,
-      average_rating,
-      reviews,
-      newReview,
-      addReview
-    };
+    return { presta, average_rating, reviews, newReview, addReview };
   },
 });
 </script>
 
 <style scoped>
-.add-review {
-  margin-top: 2rem;
-}
-
-.review-card {
-  border: 1px solid #ccc;
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
+.add-review { margin-top: 2rem; }
+.review-card { border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem; }
 </style>

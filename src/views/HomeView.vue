@@ -28,12 +28,19 @@
 import { defineComponent, computed, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
+// Définir l'interface pour un service
+interface Service {
+  nom: string;
+  description: string;
+  price: string;
+}
+
 export default defineComponent({
   name: 'HomeView',
   setup() {
     const router = useRouter();
     const username = computed(() => localStorage.getItem('username'));
-    const services = ref([]);
+    const services = ref<Service[]>([]); // Utiliser l'interface Service ici
 
     const goToUserList = () => {
       router.push('/user-list'); // Assurez-vous que le chemin correspond à celui défini dans le router
