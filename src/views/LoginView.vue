@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: 'LoginPage',
@@ -33,6 +33,7 @@ export default defineComponent({
     });
     const error = ref(false);
     const errorMessage = ref('');
+
     const goToInscription = () => {
       router.push('/inscription');
     };
@@ -50,24 +51,30 @@ export default defineComponent({
           body: JSON.stringify(credentials.value),
         });
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Connexion réussie:', data);
-          // Ici, vous devriez enregistrer les tokens et rediriger l'utilisateur.
-          localStorage.setItem('accessToken', data.access_token);
-          localStorage.setItem('refreshToken', data.refresh_token);
-          router.push('/home'); // Redirige vers la page d'accueil.
-        } else {
-          // Gérez les erreurs HTTP ici
-          error.value = true;
-          const errorData = await response.json();
-          errorMessage.value = errorData.message || 'Une erreur est survenue lors de la connexion.';
+        if (!response.ok) {
+          throw response;
         }
+
+        const data = await response.json();
+        // Stockez ici vos tokens dans localStorage ou dans un état global
+        localStorage.setItem('access_token', data.access_token);
+        localStorage.setItem('refresh_token', data.refresh_token);
+        localStorage.setItem('user_id', data.user_id);
+        // Redirection vers la page d'accueil
+        router.push('/home');
       } catch (err) {
-        // Gérez les erreurs de réseau ou autres erreurs inattendues ici
-        console.error('Erreur réseau ou inattendue:', err);
         error.value = true;
-        errorMessage.value = 'Une erreur réseau ou inconnue est survenue.';
+        if (err instanceof Response) {
+          if (err.status === 404) {
+            errorMessage.value = 'Nom d’utilisateur non trouvé.';
+          } else if (err.status === 401) {
+            errorMessage.value = 'Mot de passe incorrect.';
+          } else {
+            errorMessage.value = 'Erreur lors de la connexion.';
+          }
+        } else {
+          errorMessage.value = 'Une erreur inconnue est survenue.';
+        }
       }
     };
 
