@@ -1,8 +1,8 @@
 import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router';
 import InscriptionPage from '../views/RegistrationView.vue';
 import LoginPage from '../views/LoginView.vue';
-import HomeView from "../views/HomeView.vue"; 
-import CreateServiceView from '../views/CreateServiceView.vue';
+import HomePage from "../views/HomeView.vue"; 
+import CreateServicePage from '../views/CreateServiceView.vue';
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -20,30 +20,14 @@ const routes: Array<RouteRecordRaw> = [
         component: InscriptionPage,
     },
     {
-        path: '/',
+        path: '/home',
         name: 'Home',
-        component: HomeView,
-        beforeEnter: (to, from, next) => {
-            // Vérifie si l'utilisateur a un token d'accès
-            if (localStorage.getItem('access_token')) {
-                next();
-            } else {
-                next({name: 'Login'}); // Redirige vers la page de connexion si aucun token n'est trouvé
-            }
-        },
+        component: HomePage,
     },
     {
-        path: '/service-creation',
-        name: 'Création d\'un service',
-        component: CreateServiceView,
-        beforeEnter: (to, from, next) => {
-            // Vérifiez si l'utilisateur a un token d'accès
-            if (localStorage.getItem('access_token')) {
-                next();
-            } else {
-                next({name: 'Login'}); // Redirige vers la page de connexion si aucun token n'est trouvé
-            }
-        },
+        path: '/service',
+        name: 'Service',
+        component: CreateServicePage,
     },
 ];
 

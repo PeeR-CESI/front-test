@@ -4,15 +4,15 @@
       <form @submit.prevent="createService">
         <div>
           <label for="nom">Nom du service:</label>
-          <input id="nom" v-model="service.nom" type="text" required>
+          <input id="nom" v-model="nom" type="text" required>
         </div>
         <div>
           <label for="description">Description:</label>
-          <textarea id="description" v-model="service.description" required></textarea>
+          <textarea id="description" v-model="description" required></textarea>
         </div>
         <div>
           <label for="price">Prix:</label>
-          <input id="price" v-model="service.price" type="text" required>
+          <input id="price" v-model="price" type="text" required>
         </div>
         <button type="submit">Créer mon service</button>
       </form>
@@ -21,15 +21,14 @@
   
   <script lang="ts">
   import { defineComponent, ref } from 'vue';
+  import router from "../router"; // Assurez-vous d'importer le routeur correctement
   
   export default defineComponent({
     name: 'CreateServicePage',
     setup() {
-      const service = ref({
-        nom: '',
-        description: '',
-        price: '',
-      });
+      const nom = ref('');
+      const description = ref('');
+      const price = ref('');
   
       const createService = async () => {
         try {
@@ -38,24 +37,30 @@
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(service.value),
+            body: JSON.stringify({
+              nom: nom.value,
+              description: description.value,
+              price: price.value,
+            }),
           });
   
-          if (response.ok) {
-            // La requête a réussi, gérer la réponse de l'API ici, par exemple, afficher un message de succès ou rediriger l'utilisateur.
-            console.log('Service créé avec succès');
-          } else {
-            // Gérez les erreurs HTTP ici
-            console.error('Une erreur est survenue lors de la création du service');
+          if (!response.ok) {
+            throw new Error(`Erreur ${response.status}`);
           }
-        } catch (err) {
-          // Gérez les erreurs de réseau ou autres erreurs inattendues ici
-          console.error('Erreur réseau ou inattendue:', err);
+  
+          const serviceData = await response.json();
+          console.log('Service créé avec succès:', serviceData);
+          router.push('/some-success-page'); // Redirection vers une page de succès ou d'accueil
+  
+        } catch (error) {
+          console.error('Erreur lors de la création du service:', error);
         }
       };
   
       return {
-        service,
+        nom,
+        description,
+        price,
         createService,
       };
     },
