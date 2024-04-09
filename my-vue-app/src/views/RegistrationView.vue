@@ -33,7 +33,7 @@ export default defineComponent({
 
     const createUser = async () => {
       try {
-        const response = await fetch('http://peer.cesi/user/create', {
+        const response = await fetch('http://peer.cesi:5000/user/create', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

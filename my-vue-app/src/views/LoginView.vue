@@ -42,7 +42,7 @@ export default defineComponent({
       errorMessage.value = '';
 
       try {
-        const response = await fetch('http://peer.cesi/auth/login', {
+        const response = await fetch('http://peer.cesi:5000/auth/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
