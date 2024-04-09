@@ -11,13 +11,20 @@
   </template>
   
   <script lang="ts">
-  import { defineComponent, onMounted, ref } from 'vue';
+  import { defineComponent, onMounted} from 'vue';
   import { useRoute } from 'vue-router';
-  
+  import { ref, Ref } from 'vue';
+
+  interface Service {
+  nom: string;
+  description: string;
+  price: string;
+}
+
   export default defineComponent({
     name: 'DisplayServiceView',
     setup() {
-      const service = ref(null);
+      const service: Ref<Service | null> = ref(null);
       const route = useRoute(); // Utilisez useRoute pour accéder aux paramètres de l'URL
   
       const fetchServiceDetails = async () => {
