@@ -35,10 +35,9 @@ const routes: Array<RouteRecordRaw> = [
         },
     },
     {
-        path: '/service/:service_id',
-        name: 'DisplayService',
-        component: DisplayServiceView,
-        props: true,
+        path: '/service',
+        name: 'Service',
+        component: CreateServicePage,
     },
     {
         path: '/parameters',
