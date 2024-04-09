@@ -11,9 +11,8 @@
   </template>
   
   <script lang="ts">
-  import { defineComponent, onMounted} from 'vue';
+  import { defineComponent, onMounted, ref, Ref} from 'vue';
   import { useRoute } from 'vue-router';
-  import { ref, Ref } from 'vue';
 
   interface Service {
   nom: string;
@@ -57,7 +56,7 @@
   /* Conteneur principal pour assurer un espacement autour des bords */
   div {
     margin: 20px;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Roboto', sans-serif;
   }
   
   /* Met en évidence le titre pour attirer l'attention */

@@ -53,12 +53,8 @@ export default defineComponent({
           console.log('Service créé avec succès:', result);
           window.alert(result.message); // Affiche le message de succès
           // Stockez le service_id comme souhaité ici. Par exemple, redirigez vers une nouvelle URL contenant le service_id
-          router.push(`/service/${result.service_id}`); // Redirige vers la page d'affichage des détails du service avec l'ID du service
+          router.push(`/service/display/${result.service_id}`); // Redirige vers la page d'affichage des détails du service avec l'ID du service
         }
-
-
-
-
         } catch (error) {
         if (error instanceof Error) { // Vérifiez que l'erreur est une instance de Error
           console.error('Erreur lors de la création du service:', error.message);
