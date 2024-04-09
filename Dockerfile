@@ -12,7 +12,7 @@ COPY package*.json ./
 RUN npm install
 
 # Copier les fichiers et dossiers du projet dans l'image
-COPY .. .
+COPY my-vue-app/ .
 
 # Construire l'application pour la production
 RUN npm run build
