@@ -10,7 +10,7 @@ import BoughtServicePage from "../views/BoughtServiceView.vue";
 import UserListPage from '../views/UserListView.vue';
 import UserDetailsPage from '../views/UserDetailsView.vue';
 import SoldServicePage from "../views/SoldServiceView.vue";
-
+import MyServicesPage from "../views/MyServicesView.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -101,6 +101,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/user-details/:id',
         name: 'UserDetails',
         component: UserDetailsPage,
+    },
+    {
+        path: '/myservices',
+        name: 'MyServices',
+        component: MyServicesPage,
     },
 ];
 
