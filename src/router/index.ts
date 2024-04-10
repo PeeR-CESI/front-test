@@ -12,6 +12,8 @@ import UserDetailsPage from '../views/UserDetailsView.vue';
 import SoldServicePage from "../views/SoldServiceView.vue";
 import MyServicesPage from "../views/MyServicesView.vue";
 import ForumPage from "../views/ForumView.vue";
+import ModifyPrestationsPage from "../views/ModifyPrestationView.vue";
+import DisplayPrestationsPage from "../views/DisplayPrestationView.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -121,6 +123,16 @@ const routes: Array<RouteRecordRaw> = [
         path: '/myservices',
         name: 'MyServices',
         component: MyServicesPage,
+    },
+    {
+        path: '/prestations/update/:sold_service_id',
+        name: 'ModifyPrestations',
+        component: ModifyPrestationsPage,
+    },
+    {
+        path: '/prestations/display/:sold_service_id',
+        name: 'DisplayPrestations',
+        component: DisplayPrestationsPage,
     },
     {
         path: '/forum',

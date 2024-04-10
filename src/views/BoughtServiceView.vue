@@ -154,62 +154,76 @@ export default defineComponent({
 
 
   
-  <style scoped>
-h2 {
-  color: #2c3e50;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: transform 0.2s;
-}
-
-li:hover {
-  transform: scale(1.02);
-}
-
-p {
-  margin: 10px 0;
-  color: #34495e;
-  line-height: 1.6;
-}
-
-strong {
-  color: #2c3e50;
-}
-
-div[v-else] {
-  text-align: center;
-  color: #34495e;
-}
-
-@media (min-width: 768px) {
+<style scoped>
+  div {
+    max-width: 960px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+  
+  h2 {
+    color: #2A9D8F;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 30px;
+  }
+  
   ul {
-    display: flex;
-    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0;
   }
-
+  
   li {
-    width: calc(50% - 40px);
-    margin: 20px;
+    background-color: #F4F4F4;
+    border-left: 5px solid #2A9D8F;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
   }
-}
-
-@media (min-width: 1024px) {
-  li {
-    width: calc(33.333% - 40px);
+  
+  li:hover {
+    background-color: #E9E9E9;
   }
-}
-</style>
+  
+  p {
+    margin: 10px 0;
+    color: #333;
+    line-height: 1.5;
+  }
+  
+  strong {
+    color: #264653;
+    font-weight: 600;
+  }
+  
+  [ v-if="loading" ],
+  [ v-else-if="errorMessage" ] {
+    text-align: center;
+    color: #E76F51;
+    font-size: 18px;
+    font-style: italic;
+  }
+  
+  div[v-else] {
+    text-align: center;
+    color: #264653;
+    font-size: 18px;
+  }
+  
+  @media (min-width: 768px) {
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  
+    p {
+      margin: 5px 10px;
+    }
+  }
+  </style>
