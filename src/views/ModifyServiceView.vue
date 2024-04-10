@@ -80,7 +80,7 @@ Résultat attendu :
           }
   
           alert('Service mis à jour avec succès!');
-          router.push(`/service/${serviceId}`);
+          router.push(`/service/display/${serviceId}`);
         } catch (error) {
           if (error instanceof Error) {
             console.error('Erreur lors de la mise à jour du service:', error.message);

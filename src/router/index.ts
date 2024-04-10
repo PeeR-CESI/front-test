@@ -5,7 +5,7 @@ import HomePage from "../views/HomeView.vue";
 import AccountParameterPage from '../views/ParamView.vue';
 import CreateServicePage from '../views/CreateServiceView.vue';
 import DisplayServicePage from '../views/DisplayServiceView.vue';
-import ModifyMyServicePage from '../views/ModifyMyServiceView.vue';
+import ModifyServicePage from '../views/ModifyServiceView.vue';
 import BoughtServicePage from "../views/BoughtServiceView.vue";
 import UserListPage from '../views/UserListView.vue';
 import UserDetailsPage from '../views/UserDetailsView.vue';
@@ -78,7 +78,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/service/update/:service_id',
         name: 'ModifyService',
-        component: ModifyMyServicePage,
+        component: ModifyServicePage,
         props: true,
     },
     {
