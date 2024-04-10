@@ -48,7 +48,7 @@ export default defineComponent({
 
     onMounted(async () => {
       try {
-        const response = await fetch('http://peer.cesi:5010/service/all');
+        const response = await fetch('http://peer.cesi/api/service/all');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des services');
         }
@@ -59,14 +59,14 @@ export default defineComponent({
     });
 
     const goToSettings = () => {
-      router.push('/parameters');
+      router.push('/account/parameters');
     };
     const showSponsorModal = ref(false);
     const sponsorEmail = ref('');
 
     const sendSponsorEmail = async () => {
       try {
-        const response = await fetch('http://peer.cesi:5000/sponsor/send', {
+        const response = await fetch('http://peer.cesi/api/sponsor/send', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

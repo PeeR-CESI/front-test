@@ -65,6 +65,7 @@ const routes: Array<RouteRecordRaw> = [
         path: '/service/create',
         name: 'ServiceCreate',
         component: CreateServicePage,
+        props: true,
     },
     {
         path: '/service/display/:service_id',

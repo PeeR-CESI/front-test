@@ -65,7 +65,7 @@ export default defineComponent({
       }
 
       try {
-        const response = await fetch(`http://peer.cesi:5000/user/update/${userId}`, {
+        const response = await fetch(`http://peer.cesi/api/user/update/${userId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
