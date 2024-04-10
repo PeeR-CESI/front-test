@@ -1,13 +1,15 @@
 import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router';
-import InscriptionPage from '../views/RegistrationView.vue';
+import RegistrationPage from '../views/RegistrationView.vue';
 import LoginPage from '../views/LoginView.vue';
 import HomePage from "../views/HomeView.vue";
-import ParamPage from '../views/ParamView.vue';
+import AccountParameterPage from '../views/ParamView.vue';
 import CreateServicePage from '../views/CreateServiceView.vue';
-import DisplayServiceView from '../views/DisplayServiceView.vue';
-import ModifyDescriptionServiceView from '../views/ModifyDescriptionServiceView.vue';
+import DisplayServicePage from '../views/DisplayServiceView.vue';
+import ModifyMyServicePage from '../views/ModifyMyServiceView.vue';
+import BoughtServicePage from "../views/BoughtServiceView.vue";
 import UserListView from '../views/UserListView.vue';
 import UserDetailsView from '../views/UserDetailsView.vue';
+
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -20,9 +22,9 @@ const routes: Array<RouteRecordRaw> = [
         component: LoginPage,
     },
     {
-        path: '/inscription',
-        name: 'Inscription',
-        component: InscriptionPage,
+        path: '/register',
+        name: 'Register',
+        component: RegistrationPage,
     },
     {
         path: '/home',
@@ -38,9 +40,9 @@ const routes: Array<RouteRecordRaw> = [
         },
     },
     {
-        path: '/parameters',
+        path: '/account/parameters',
         name: 'Parameters',
-        component: ParamPage,
+        component: AccountParameterPage,
         beforeEnter: (to, from, next) => {
             if (localStorage.getItem('access_token')) {
                 next();
@@ -49,21 +51,37 @@ const routes: Array<RouteRecordRaw> = [
             }
         },
     },
+    // {
+    //     path: '/admin/statistics', // Redirige les admins vers la page de statistiques d'utilisation de la plateforme
+    //     name: 'Statistics',
+    //     component: StatisticsPage,
+    // },
+    // {
+    //     path: '/dev/components', // le but ici c'est d'avoir le lien qui redirige vers les swaggers API
+    //     name: 'API',
+    //     component: APIPage,
+    // },
     {
-        path: '/service',
-        name: 'Service',
+        path: '/service/create',
+        name: 'ServiceCreate',
         component: CreateServicePage,
     },
     {
         path: '/service/display/:service_id',
         name: 'DisplayService',
-        component: DisplayServiceView,
+        component: DisplayServicePage,
         props: true,
     },
     {
-        path: '/service/modify/:service_id',
+        path: '/service/update/:service_id',
         name: 'ModifyService',
-        component: ModifyDescriptionServiceView,
+        component: ModifyMyServicePage,
+        props: true,
+    },
+    {
+        path: '/myorders',
+        name: 'MyOrders',
+        component: BoughtServicePage,
         props: true,
     },
     {
