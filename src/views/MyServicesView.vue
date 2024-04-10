@@ -40,7 +40,6 @@ export default defineComponent({
     const loading = ref(true);
     const errorMessage = ref('');
 
-    // Déplacez cette méthode ici, à l'extérieur de `onMounted`
     const navigateToService = (serviceId: string) => {
       router.push({ name: 'DisplayService', params: { service_id: serviceId } });
     };
@@ -89,6 +88,7 @@ export default defineComponent({
     return { myServices, loading, errorMessage, navigateToService };
   },
 });
+
 </script>
   
   <style scoped>

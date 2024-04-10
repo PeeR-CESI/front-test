@@ -31,7 +31,7 @@ Résultat attendu :
     <button v-if="isOwnerOrAdmin" @click="navigateToModifyService">Modifier le service</button>
     
     <!-- Bouton Supprimer mon service -->
-    <button v-if="isOwnerOrAdmin" @click="deleteServiceConfirmation">Supprimer le service</button>
+    <button v-if="isOwnerOrAdmin" @click="deleteServiceConfirmation" class="delete-button">Supprimer le service</button>
     
   </div>
   <div v-else>
@@ -103,7 +103,6 @@ export default defineComponent({
   
     const buyService = async () => {
       if (!service.value) return;
-      const serviceId = route.params.service_id;
       const userId = localStorage.getItem('user_id'); // Assurez-vous que l'ID utilisateur est correctement stocké lors de la connexion
       
       if (!userId) {
@@ -118,7 +117,11 @@ export default defineComponent({
           const sellResponse = await fetch('http://peer.cesi/api/service/sell/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ advancement: 0, service_id: serviceId }),
+            body: JSON.stringify({
+              service_id: service.value._id,
+              demandeur_id: userId, // ID de l'utilisateur connecté
+              advancement: 0,
+            }),
           });
 
           if (!sellResponse.ok) throw new Error('Problème lors de la vente du service.');
@@ -155,10 +158,8 @@ export default defineComponent({
           alert('Service acheté avec succès!');
         } catch (error) {
           if (error instanceof Error) {
-            // Maintenant, TypeScript sait que 'error' est une instance de Error et que 'message' existe
             alert('Erreur lors de l\'achat du service: ' + error.message);
           } else {
-            // Pour les cas où 'error' n'est pas une instance de Error, par exemple une string ou autre
             alert('Erreur lors de l\'achat du service: ' + String(error));
           }
         }
@@ -173,19 +174,40 @@ export default defineComponent({
     const deleteServiceConfirmation = async () => {
       if (service.value?._id && confirm('Êtes-vous sûr de vouloir supprimer ce service ?')) {
         try {
-          const response = await fetch(`http://peer.cesi/api/service/delete/${service.value._id}`, {
+          // Étape 2: Suppression du service
+          const deleteResponse = await fetch(`http://peer.cesi/api/service/delete/${service.value._id}`, {
             method: 'DELETE'
           });
-          if (!response.ok) {
+          if (!deleteResponse.ok) {
             throw new Error('Erreur lors de la suppression du service');
           }
+          
+          // Étape 1: Récupération des informations actuelles du prestataire
+          const prestaResponse = await fetch(`http://peer.cesi/api/user/find/${service.value.presta_id}`);
+          if (!prestaResponse.ok) throw new Error('Erreur lors de la récupération des infos du prestataire.');
+          const prestaInfo = await prestaResponse.json();
+          
+          // Étape 3: Mise à jour de la liste des `service_ids` sans l'ID du service supprimé
+          const updatedServiceIds = prestaInfo.service_ids.filter((id: string) => id !== service.value!._id);
+
+          
+          // Étape 4: Mise à jour des informations du prestataire avec la nouvelle liste des `service_ids`
+          const updateResponse = await fetch(`http://peer.cesi/api/user/update/${service.value.presta_id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...prestaInfo, service_ids: updatedServiceIds }),
+          });
+          if (!updateResponse.ok) throw new Error('Erreur lors de la mise à jour du prestataire.');
+
           alert('Service supprimé avec succès.');
           router.push('/home');
         } catch (error) {
+          console.error(error);
           alert('Erreur lors de la suppression du service.');
         }
       }
     };
+
 
     onMounted(fetchServiceDetails);
 
@@ -201,34 +223,59 @@ export default defineComponent({
 </script>
   
 <style scoped>
-/* Conteneur principal pour assurer un espacement autour des bords */
+/* Conteneur principal pour un alignement centré et un design épuré */
 div {
-  margin: 20px;
-  font-family: 'Roboto', sans-serif;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Met en évidence le titre pour attirer l'attention */
+/* Style des titres pour plus de visibilité */
 h2 {
   color: #333;
+  text-align: center;
   margin-bottom: 20px;
 }
 
-/* Style pour les informations du service, avec un espacement uniforme */
+/* Amélioration de la lisibilité du texte */
 p {
-  margin: 10px 0;
+  color: #666;
   line-height: 1.6;
-  color: #555;
+  margin: 10px 0;
 }
 
-/* Met en valeur les éléments clés */
+/* Mise en évidence des éléments clés */
 strong {
-  color: #000;
-  font-weight: bold;
+  color: #333;
 }
 
-/* Style spécifique pour le message de chargement ou d'erreur */
-div:nth-child(2) p {
-  color: #999;
-  font-style: italic;
+/* Style des boutons pour une meilleure interaction utilisateur */
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 10px;
+}
+
+/* Style spécifique pour le bouton supprimer */
+.delete-button {
+  background-color: #dc3545; /* Rouge par défaut pour le bouton Supprimer */
+}
+
+.delete-button:hover {
+  background-color: #c82333; /* Rouge plus foncé au survol */
+}
+
+button:hover {
+  background-color: #0056b3;
 }
 </style>
+
