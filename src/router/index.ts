@@ -7,7 +7,6 @@ import CreateServicePage from '../views/CreateServiceView.vue';
 import DisplayServicePage from '../views/DisplayServiceView.vue';
 import ModifyMyServicePage from '../views/ModifyMyServiceView.vue';
 import BoughtServicePage from "../views/BoughtServiceView.vue";
-import SoldServicePage from "../views/SoldServiceView.vue";
 import UserListView from '../views/UserListView.vue';
 import UserDetailsView from '../views/UserDetailsView.vue';
 
