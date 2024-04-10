@@ -55,7 +55,7 @@
   export default defineComponent({
     name: 'BoughtServiceView',
     setup() {
-      const services = ref([]);
+      const services = ref<Service[]>([]);
       const loading = ref(true);
       const errorMessage = ref('');
   
