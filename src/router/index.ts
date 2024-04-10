@@ -8,6 +8,9 @@ import DisplayServicePage from '../views/DisplayServiceView.vue';
 import ModifyMyServicePage from '../views/ModifyMyServiceView.vue';
 import BoughtServicePage from "../views/BoughtServiceView.vue";
 import SoldServicePage from "../views/SoldServiceView.vue";
+import UserListView from '../views/UserListView.vue';
+import UserDetailsView from '../views/UserDetailsView.vue';
+
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -81,6 +84,16 @@ const routes: Array<RouteRecordRaw> = [
         name: 'MyOrders',
         component: BoughtServicePage,
         props: true,
+    },
+    {
+        path: '/user-list',
+        name: 'UserList',
+        component: UserListView,
+    },
+    {
+        path: '/user-details/:id',
+        name: 'UserDetails',
+        component: UserDetailsView,
     },
 ];
 
