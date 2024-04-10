@@ -81,11 +81,28 @@ export default defineComponent({
     };
 
     const sendSponsorEmail = async () => {
-      // Ici, insérez la logique pour envoyer un email de parrainage
-      console.log(`Email de parrainage envoyé à: ${sponsorEmail.value}`);
-      showSponsorModal.value = false;
-      sponsorEmail.value = '';
-      // Ajoutez la gestion d'envoi d'email ici
+      try {
+        const response = await fetch('http://peer.cesi/api/sponsor/send', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: sponsorEmail.value }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Erreur lors de l\'envoi de l\'email');
+        }
+
+        // Réinitialisation pour fermer le pop-up et nettoyer le champ email
+        showSponsorModal.value = false;
+        sponsorEmail.value = '';
+
+        alert('Email envoyé avec succès');
+      } catch (error) {
+        console.error(error);
+        alert('Erreur lors de l\'envoi de l\'email');
+      }
     };
 
     return {

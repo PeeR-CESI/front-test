@@ -5,15 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="10102c89-9497-4caa-b272-da63800d9de2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/assets/bureau.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/image.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/views/ForumView.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/views/NavigationBar.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/HomeView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/HomeView.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/LoginView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/LoginView.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/RegistrationView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/RegistrationView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/NavigationBar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/NavigationBar.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,7 +81,7 @@
       <updated>1712651819192</updated>
       <workItem from="1712651820244" duration="5698000" />
       <workItem from="1712671817111" duration="10102000" />
-      <workItem from="1712752272272" duration="18964000" />
+      <workItem from="1712752272272" duration="19881000" />
     </task>
     <servers />
   </component>
