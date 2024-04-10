@@ -20,8 +20,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import router from "../router"; // Assurez-vous d'importer le routeur correctement
+
+function decodeToken(token) {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+  
+  return JSON.parse(jsonPayload);
+}
 
 export default defineComponent({
   name: 'CreateServicePage',
@@ -29,6 +39,20 @@ export default defineComponent({
     const nom = ref('');
     const description = ref('');
     const price = ref('');
+    const userId = ref('');
+
+    // Récupérer l'ID de l'utilisateur connecté dès le montage du composant
+    onMounted(() => {
+      const token = localStorage.getItem('access_token');
+      if (token) {
+        const decoded = decodeToken(token);
+        userId.value = decoded.user_id; // Assumer que le token JWT contient `user_id`
+        if (decoded.role === "demandeur") {
+          alert("Vous n'êtes pas prestataire, vous ne pouvez pas créer de service");
+          router.push('/');
+        }
+      }
+    });
 
     const createService = async () => {
       try {
@@ -41,6 +65,7 @@ export default defineComponent({
             nom: nom.value,
             description: description.value,
             price: price.value,
+            presta_id: userId.value,
           }),
         });
 
@@ -48,23 +73,43 @@ export default defineComponent({
           throw new Error(`Erreur ${response.status}`);
         }
 
-        const result = await response.json();
-        if (response.status === 201) {
-          console.log('Service créé avec succès:', result);
-          window.alert(result.message); // Affiche le message de succès
-          // Stockez le service_id comme souhaité ici. Par exemple, redirigez vers une nouvelle URL contenant le service_id
-          router.push(`/service/display/${result.service_id}`); // Redirige vers la page d'affichage des détails du service avec l'ID du service
-        }
-        } catch (error) {
-        if (error instanceof Error) { // Vérifiez que l'erreur est une instance de Error
-          console.error('Erreur lors de la création du service:', error.message);
-          window.alert(`Erreur lors de la création du service: ${error.message}`);
-        } else {
-          console.error('Erreur inconnue lors de la création du service', error);
-          window.alert('Erreur inconnue lors de la création du service');
-        }
+        const { service_id } = await response.json();
+        console.log('Service créé avec succès:', service_id);
+        await updatePrestaServices(service_id); // Mise à jour des services du prestataire
+
+        window.alert('Service créé avec succès!');
+        router.push(`/service/display/${service_id}`);
+      } catch (error) {
+        console.error('Erreur lors de la création du service:', error);
+        window.alert(`Erreur lors de la création du service: ${error.message}`);
       }
-      };
+    };
+
+    // Mise à jour de la liste des services du prestataire avec le nouveau service_id
+    const updatePrestaServices = async (newServiceId) => {
+      try {
+        const userInfoResponse = await fetch(`http://peer.cesi/api/user/find/${userId.value}`);
+        if (!userInfoResponse.ok) {
+          throw new Error('Impossible de récupérer les informations de l\'utilisateur.');
+        }
+        const userInfo = await userInfoResponse.json();
+
+        let updatedServiceIds = userInfo.service_ids || [];
+        updatedServiceIds.push(newServiceId);
+
+        const updateUserResponse = await fetch(`http://peer.cesi/api/user/update/${userId.value}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...userInfo, service_ids: updatedServiceIds }),
+        });
+
+        if (!updateUserResponse.ok) {
+          throw new Error('Mise à jour des services de l\'utilisateur échouée.');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la mise à jour des services de l\'utilisateur:', error);
+      }
+    };
 
     return {
       nom,
