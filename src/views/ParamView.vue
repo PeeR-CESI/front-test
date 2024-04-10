@@ -119,5 +119,61 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Ajoutez vos styles ici si nécessaire */
+.settings {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.settings h2 {
+  color: #30475e; /* A similar blue to the one in the second image */
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: .5rem;
+  color: #30475e;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+  padding: .8rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: .8rem 2rem;
+  margin: .5rem 0;
+  color: #fff;
+  background-color: #30475e; /* Button color to match the second image */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #1b2a49; /* Darken the button on hover */
+}
+
+button:last-child {
+  background-color: #f05454; /* Red color for the delete button */
+}
+
+button:last-child:hover {
+  background-color: #c04848; /* Darken the delete button on hover */
+}
 </style>

@@ -5,6 +5,7 @@ node_modules/
 dist/
 npm-debug.log
 yarn-error.log
+.idea
 
 # End of https://www.toptal.com/developers/gitignore/api/vuejs
 
