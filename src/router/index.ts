@@ -7,8 +7,9 @@ import CreateServicePage from '../views/CreateServiceView.vue';
 import DisplayServicePage from '../views/DisplayServiceView.vue';
 import ModifyMyServicePage from '../views/ModifyMyServiceView.vue';
 import BoughtServicePage from "../views/BoughtServiceView.vue";
-import UserListView from '../views/UserListView.vue';
-import UserDetailsView from '../views/UserDetailsView.vue';
+import UserListPage from '../views/UserListView.vue';
+import UserDetailsPage from '../views/UserDetailsView.vue';
+import SoldServicePage from "../views/SoldServiceView.vue";
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -86,14 +87,20 @@ const routes: Array<RouteRecordRaw> = [
         props: true,
     },
     {
+        path: '/myprestations',
+        name: 'MyPrestations',
+        component: SoldServicePage,
+        props: true,
+    },
+    {
         path: '/user-list',
         name: 'UserList',
-        component: UserListView,
+        component: UserListPage,
     },
     {
         path: '/user-details/:id',
         name: 'UserDetails',
-        component: UserDetailsView,
+        component: UserDetailsPage,
     },
 ];
 
