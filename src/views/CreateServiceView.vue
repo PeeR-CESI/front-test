@@ -21,9 +21,10 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
-import router from "../router"; // Assurez-vous d'importer le routeur correctement
+import router from "../router";
 
-function decodeToken(token) {
+// Explicitly type the parameter `token` to resolve TS7006
+function decodeToken(token: string): any { // Consider specifying a more precise return type than `any`
   const base64Url = token.split('.')[1];
   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
   const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
@@ -41,12 +42,12 @@ export default defineComponent({
     const price = ref('');
     const userId = ref('');
 
-    // Récupérer l'ID de l'utilisateur connecté dès le montage du composant
     onMounted(() => {
       const token = localStorage.getItem('access_token');
       if (token) {
+        // Since decodeToken now requires a string, TypeScript won't complain here
         const decoded = decodeToken(token);
-        userId.value = decoded.user_id; // Assumer que le token JWT contient `user_id`
+        userId.value = decoded.user_id; // Assuming the JWT token contains `user_id`
         if (decoded.role === "demandeur") {
           alert("Vous n'êtes pas prestataire, vous ne pouvez pas créer de service");
           router.push('/');
@@ -75,18 +76,20 @@ export default defineComponent({
 
         const { service_id } = await response.json();
         console.log('Service créé avec succès:', service_id);
-        await updatePrestaServices(service_id); // Mise à jour des services du prestataire
+        await updatePrestaServices(service_id);
 
         window.alert('Service créé avec succès!');
         router.push(`/service/display/${service_id}`);
-      } catch (error) {
-        console.error('Erreur lors de la création du service:', error);
-        window.alert(`Erreur lors de la création du service: ${error.message}`);
+      } catch (error: unknown) { // Properly handle error of type unknown
+        if (error instanceof Error) {
+          console.error('Erreur lors de la création du service:', error);
+          window.alert(`Erreur lors de la création du service: ${error.message}`);
+        }
       }
     };
 
-    // Mise à jour de la liste des services du prestataire avec le nouveau service_id
-    const updatePrestaServices = async (newServiceId) => {
+    // Explicitly type the parameter `newServiceId` to resolve TS7006
+    const updatePrestaServices = async (newServiceId: string) => {
       try {
         const userInfoResponse = await fetch(`http://peer.cesi/api/user/find/${userId.value}`);
         if (!userInfoResponse.ok) {
@@ -106,8 +109,10 @@ export default defineComponent({
         if (!updateUserResponse.ok) {
           throw new Error('Mise à jour des services de l\'utilisateur échouée.');
         }
-      } catch (error) {
-        console.error('Erreur lors de la mise à jour des services de l\'utilisateur:', error);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error('Erreur lors de la mise à jour des services de l\'utilisateur:', error);
+        }
       }
     };
 
