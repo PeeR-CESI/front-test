@@ -26,8 +26,22 @@
   <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue';
   import router from "../router";
+
+  interface Presta {
+    nom: string;
+    prenom: string;
+    email: string;
+  }
+    
+  interface Service {
+    _id: string;
+    nom: string;
+    description: string;
+    price: number;
+    presta: Presta;
+  }
   
-  function decodeToken(token) {
+  function decodeToken(token: string | null): any {
     if (!token) return {};
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
