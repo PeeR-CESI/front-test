@@ -8,10 +8,11 @@
     <div v-else-if="soldServices.length">
       <ul>
         <li v-for="soldService in soldServices" :key="soldService._id">
-          <p><strong>Nom du Service:</strong> {{ soldService.nom }}</p>
+          <p><strong>Nom du Service:</strong> {{ soldService.name }}</p>
           <p><strong>Description:</strong> {{ soldService.description }}</p>
           <p><strong>Prix:</strong> {{ soldService.price }}</p>
           <p><strong>Avancement:</strong> {{ soldService.advancement }}%</p>
+          <p><strong>Statut:</strong> {{ soldService.status }}</p> <!-- Ajoutez cette ligne -->
           <p><strong>ID du Service Vendu:</strong> {{ soldService._id }}</p>
         </li>
       </ul>
@@ -28,10 +29,11 @@ import router from "../router";
 
 interface ServiceSold {
   _id: string;
-  nom: string;
+  name: string;
   description: string;
   price: number;
   advancement: number;
+  status: string; 
 }
 
 function decodeToken(token: string | null): any {
@@ -81,21 +83,7 @@ export default defineComponent({
           if (!serviceSellResponse.ok) throw new Error('Problème lors de la récupération des détails du service vendu.');
           const serviceSellData = await serviceSellResponse.json();
 
-          // Récupérer les détails de base du service utilisant `base_service_id`
-          const baseServiceResponse = await fetch(`http://peer.cesi/api/service/${serviceSellData.base_service_id}`);
-          if (!baseServiceResponse.ok) throw new Error('Problème lors de la récupération des informations du service de base.');
-          const baseServiceData = await baseServiceResponse.json();
-
-          // Construire un objet avec les informations complètes du service
-          const fullServiceData = {
-            _id: serviceSellData._id,
-            advancement: serviceSellData.advancement,
-            nom: baseServiceData.nom, // Les champs nom, description et prix sont maintenant correctement assignés
-            description: baseServiceData.description,
-            price: baseServiceData.price,
-          };
-
-          soldServices.value.push(fullServiceData);
+          soldServices.value.push(serviceSellData);
         }
       } catch (error) {
         errorMessage.value = 'Erreur lors de la récupération des services vendus: ' + (error instanceof Error ? error.message : String(error));

@@ -21,38 +21,70 @@ Résultat attendu :
 */
 
 <template>
-    <div v-if="service">
-      <h2>Détails du Service</h2>
-      <p><strong>Nom:</strong> {{ service.nom }}</p>
-      <p><strong>Description:</strong> {{ service.description }}</p>
-      <p><strong>Prix:</strong> {{ service.price }}</p>
-    </div>
-    <div v-else>
-      <p>Chargement des détails du service ou service non trouvé...</p>
-    </div>
-    <button v-if="service" @click="buyService">Acheter ce service</button>
-  </template>
+  <div v-if="service">
+    <h2>Détails du Service</h2>
+    <p><strong>Nom:</strong> {{ service.nom }}</p>
+    <p><strong>Description:</strong> {{ service.description }}</p>
+    <p><strong>Prix:</strong> {{ service.price }}</p>
+    
+    <!-- Bouton Modifier mon service -->
+    <button v-if="isOwnerOrAdmin" @click="navigateToModifyService">Modifier le service</button>
+    
+    <!-- Bouton Supprimer mon service -->
+    <button v-if="isOwnerOrAdmin" @click="deleteServiceConfirmation">Supprimer le service</button>
+    
+  </div>
+  <div v-else>
+    <p>Chargement des détails du service ou service non trouvé...</p>
+  </div>
+  <button v-if="service && !isOwnerOrAdmin" @click="buyService">Acheter ce service</button>
+</template>
   
 <script lang="ts">
-import { defineComponent, onMounted, ref, Ref} from 'vue';
-import { useRoute } from 'vue-router';
-import router from "../router";
+import { defineComponent, onMounted, ref, Ref, computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 interface Service {
+  _id: string;
   nom: string;
   description: string;
   price: string;
   presta_id: string;
 }
 
+function decodeToken(token: string): any { 
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+  
+  return JSON.parse(jsonPayload);
+}
+
 export default defineComponent({
   name: 'DisplayServiceView',
   props: {
-      service_id: String // Ajoutez cette ligne pour déclarer service_id comme prop
+      service_id: String
   },
   setup(props) {
     const service: Ref<Service | null> = ref(null);
-    const route = useRoute(); // Utilisez useRoute pour accéder aux paramètres de l'URL
+    const router = useRouter();
+    const route = useRoute();
+    let userId = '';
+    let userRole = '';
+
+    // Utiliser le token pour définir userId et userRole
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      const decoded = decodeToken(token);
+      userId = decoded.user_id;
+      userRole = decoded.role;
+    }
+
+    const isOwnerOrAdmin = computed(() => {
+      return service.value?.presta_id === userId || userRole === 'admin';
+    });
   
     const fetchServiceDetails = async () => {
       try {
@@ -132,11 +164,37 @@ export default defineComponent({
         }
     };
 
-      onMounted(fetchServiceDetails);
+    const navigateToModifyService = () => {
+      if (service.value?._id) {
+        router.push({ name: 'ModifyService', params: { service_id: service.value._id } });
+      }
+    };
+
+    const deleteServiceConfirmation = async () => {
+      if (service.value?._id && confirm('Êtes-vous sûr de vouloir supprimer ce service ?')) {
+        try {
+          const response = await fetch(`http://peer.cesi/api/service/delete/${service.value._id}`, {
+            method: 'DELETE'
+          });
+          if (!response.ok) {
+            throw new Error('Erreur lors de la suppression du service');
+          }
+          alert('Service supprimé avec succès.');
+          router.push('/home');
+        } catch (error) {
+          alert('Erreur lors de la suppression du service.');
+        }
+      }
+    };
+
+    onMounted(fetchServiceDetails);
 
     return {
       service,
-      buyService, // Assurez-vous d'ajouter cette nouvelle méthode
+      buyService,
+      isOwnerOrAdmin,
+      navigateToModifyService,
+      deleteServiceConfirmation,
     };
   },
 });
