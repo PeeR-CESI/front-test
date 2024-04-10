@@ -1,3 +1,25 @@
+/*
+Vue "Détails du Service" :
+- Cette vue affiche les détails d'un service spécifique, accessible par son ID. Les informations affichées incluent le nom, la description et le prix du service.
+- Elle est capable de gérer les situations où le service est en cours de chargement ou n'a pas été trouvé, en affichant un message approprié à l'utilisateur.
+- Un bouton permet à l'utilisateur d'acheter le service affiché, déclenchant une série d'opérations côté serveur pour enregistrer cette transaction.
+
+Conditions préalables :
+- Aucune condition spécifique pour visualiser les détails du service, mais pour acheter un service, l'utilisateur doit être connecté et avoir un ID utilisateur valide stocké localement.
+
+Fonctionnalités :
+- Récupération des détails du service depuis l'API à l'aide de l'ID fourni dans l'URL ou en tant que prop.
+- Fonctionnalité d'achat qui envoie une requête pour marquer le service comme vendu, met à jour les enregistrements de l'utilisateur (demandeur et prestataire) avec l'ID du service vendu, et affiche un message de confirmation ou d'erreur selon le résultat de l'opération.
+
+Sécurité :
+- Validation côté client pour s'assurer que l'ID du service est fourni et est valide avant d'effectuer la requête de détails.
+- Mesures de sécurité supplémentaires devraient être prises côté serveur pour vérifier l'authenticité des requêtes d'achat.
+
+Résultat attendu :
+- Les utilisateurs peuvent visualiser les détails complets d'un service.
+- En cas de succès de l'achat, l'utilisateur reçoit une confirmation, et les enregistrements sont mis à jour en conséquence. En cas d'échec, un message d'erreur est affiché pour informer l'utilisateur du problème.
+*/
+
 <template>
     <div v-if="service">
       <h2>Détails du Service</h2>

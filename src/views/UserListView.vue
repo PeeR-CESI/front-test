@@ -40,7 +40,7 @@ export default defineComponent({
 
     onMounted(async () => {
       try {
-        const response = await fetch('http://peer.cesi:5000/user/all');
+        const response = await fetch('http://peer.cesi/api/user/all');
         if (!response.ok) {
           throw new Error(`Erreur HTTP : ${response.status}`);
         }

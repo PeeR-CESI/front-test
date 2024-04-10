@@ -1,3 +1,22 @@
+/*
+Vue "Créer mon service" :
+- Cette vue permet aux utilisateurs avec les rôles "presta" ou "admin" de créer un nouveau service. 
+- Elle implémente une vérification de rôle à partir du token de connexion, effectue une requête POST à /api/service/create pour créer le service, et associe automatiquement l'ID de l'utilisateur au "presta_id" du service créé. 
+- Ensuite, elle met à jour la liste "service_ids" du prestataire avec le "service_id" nouvellement créé.
+
+Conditions préalables : 
+- L'utilisateur doit être connecté avec un rôle approprié. 
+- La vue gère la validation côté client pour tous les champs du formulaire et affiche des alertes d'erreur en cas de problèmes de requête.
+
+Sécurité : 
+- Les entrées sont validées pour éviter les injections SQL et XSS. 
+- La vérification du rôle garantit que seuls les utilisateurs autorisés peuvent créer des services.
+
+Résultat attendu : 
+- En cas de succès, l'utilisateur est redirigé vers la page de visualisation du service avec un message de confirmation. 
+- En cas d'erreur (par exemple, rôle non autorisé, problème de réseau), l'utilisateur est informé via un message d'alerte.
+*/
+
 <template>
   <div>
     <h2>Créer mon service</h2>
@@ -23,8 +42,7 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import router from "../router";
 
-// Explicitly type the parameter `token` to resolve TS7006
-function decodeToken(token: string): any { // Consider specifying a more precise return type than `any`
+function decodeToken(token: string): any { 
   const base64Url = token.split('.')[1];
   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
   const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
@@ -45,9 +63,8 @@ export default defineComponent({
     onMounted(() => {
       const token = localStorage.getItem('access_token');
       if (token) {
-        // Since decodeToken now requires a string, TypeScript won't complain here
         const decoded = decodeToken(token);
-        userId.value = decoded.user_id; // Assuming the JWT token contains `user_id`
+        userId.value = decoded.user_id;
         if (decoded.role === "demandeur") {
           alert("Vous n'êtes pas prestataire, vous ne pouvez pas créer de service");
           router.push('/');
@@ -80,7 +97,7 @@ export default defineComponent({
 
         window.alert('Service créé avec succès!');
         router.push(`/service/display/${service_id}`);
-      } catch (error: unknown) { // Properly handle error of type unknown
+      } catch (error: unknown) {
         if (error instanceof Error) {
           console.error('Erreur lors de la création du service:', error);
           window.alert(`Erreur lors de la création du service: ${error.message}`);
@@ -88,7 +105,6 @@ export default defineComponent({
       }
     };
 
-    // Explicitly type the parameter `newServiceId` to resolve TS7006
     const updatePrestaServices = async (newServiceId: string) => {
       try {
         const userInfoResponse = await fetch(`http://peer.cesi/api/user/find/${userId.value}`);

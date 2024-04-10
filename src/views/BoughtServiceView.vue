@@ -1,3 +1,25 @@
+/*
+Vue "Services Achetés" :
+- Cette vue est conçue pour les utilisateurs ayant le rôle de "demandeur". Elle affiche une liste des services que l'utilisateur a achetés précédemment.
+- La vue commence par vérifier si l'utilisateur est connecté et a le rôle approprié. En cas de non-conformité, un message d'erreur est affiché et l'utilisateur est redirigé.
+- Si les conditions sont remplies, la vue récupère la liste des ID des services achetés par l'utilisateur et fait une requête à l'API pour chaque service afin de récupérer et afficher ses détails, ainsi que les informations du prestataire correspondant.
+
+Conditions préalables :
+- L'utilisateur doit être connecté et avoir le rôle de "demandeur".
+- Les ID des services achetés doivent être enregistrés et associés à l'utilisateur.
+
+Fonctionnalités :
+- Récupération et affichage des détails des services achetés, y compris les informations du prestataire de chaque service.
+- Gestion des états de chargement et d'erreur, avec affichage de messages appropriés selon la situation (par exemple, "Chargement des services...", "Aucun service acheté trouvé", ou messages d'erreur spécifiques).
+
+Sécurité :
+- Vérification de l'authenticité de l'utilisateur et de son autorisation à accéder à cette page, basée sur le rôle et l'ID stockés dans le token JWT.
+- Validation côté serveur pour s'assurer que les requêtes de récupération des informations des services et des prestataires sont légitimes.
+
+Résultat attendu :
+- L'utilisateur visualise une liste des services qu'il a achetés avec leurs détails complets. En cas d'échec de la récupération des données, un message d'erreur est affiché pour informer l'utilisateur de la situation.
+*/
+
 <template>
     <div>
       <h2>Services Achetés</h2>
