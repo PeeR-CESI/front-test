@@ -15,70 +15,93 @@
   import { defineComponent, onMounted, ref, Ref} from 'vue';
   import { useRoute } from 'vue-router';
 
-  // Extend the Service interface to include presta_id
   interface Service {
-    nom: string;
-    description: string;
-    price: string;
-    presta_id?: string; // Make it optional if not all services have a prestataire ID
-  }
+  nom: string;
+  description: string;
+  price: string;
+}
 
   export default defineComponent({
     name: 'DisplayServiceView',
-    setup() {
+    props: {
+        service_id: String // Ajoutez cette ligne pour déclarer service_id comme prop
+    },
+    setup(props) {
       const service: Ref<Service | null> = ref(null);
-      const route = useRoute();
-    
+      const route = useRoute(); // Utilisez useRoute pour accéder aux paramètres de l'URL
+  
       const fetchServiceDetails = async () => {
         try {
-          const serviceId = route.params.service_id;
+          const serviceId = route.params.service_id; // Récupère l'ID du service depuis l'URL
           const response = await fetch(`http://peer.cesi/api/service/${serviceId}`);
-    
+  
           if (!response.ok) {
             throw new Error(`Erreur lors de la récupération du service: ${response.status}`);
           }
-    
+  
           const data = await response.json();
-          service.value = data;
-        } catch (error: unknown) { // Correctly handle the error of type unknown
+          service.value = data; // Stockez les données du service récupéré dans la variable réactive 'service'
+        } catch (error) {
           console.error(error);
-          service.value = null;
-          // Perform additional error handling here, if necessary
+          service.value = null; // En cas d'erreur, réinitialiser 'service' pour indiquer une erreur de chargement
         }
       };
-    
+  
       const buyService = async () => {
         const serviceId = route.params.service_id;
-        const userId = localStorage.getItem('user_id');
+        const userId = localStorage.getItem('user_id'); // Assurez-vous que l'ID utilisateur est correctement stocké lors de la connexion
         
         try {
-          const sellResponse = await fetch('http://peer.cesi/api/service/sell/', {
+            // 1. Vendre le service
+            const sellResponse = await fetch('http://peer.cesi/api/service/sell/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ advancement: 0, service_id: serviceId }),
-          });
+            });
 
-          if (!sellResponse.ok) throw new Error('Problème lors de la vente du service.');
-          const { sold_service_id } = await sellResponse.json();
-          
-          // Additional code for updating user and prestataire information goes here
+            if (!sellResponse.ok) throw new Error('Problème lors de la vente du service.');
+            const { sold_service_id } = await sellResponse.json();
+            
+            // 2. Récupérer les infos de l'utilisateur (demandeur)
+            const userResponse = await fetch(`http://peer.cesi/api/user/find/${userId}`);
+            if (!userResponse.ok) throw new Error('Problème lors de la récupération des infos utilisateur.');
+            const userInfo = await userResponse.json();
 
-          alert('Service acheté avec succès!');
-        } catch (error: unknown) { // Correctly handle the error of type unknown
-          if (error instanceof Error) {
-            alert(`Erreur lors de l'achat du service: ${error.message}`);
-          } else {
-            alert('Une erreur inconnue est survenue.');
-          }
+            // 3. Mettre à jour les infos de l'utilisateur (demandeur) avec le nouveau sold_service_id
+            const updatedSoldServiceIds = userInfo.sold_service_ids ? [...userInfo.sold_service_ids, sold_service_id] : [sold_service_id];
+            await fetch(`http://peer.cesi/api/user/update/${userId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...userInfo, sold_service_ids: updatedSoldServiceIds }),
+            });
+
+            // 4. Mettre à jour le prestataire avec le nouveau sold_service_id
+            if (service.value && service.value.presta_id) {
+                const prestaId = service.value.presta_id; // ID du prestataire
+                const prestaResponse = await fetch(`http://peer.cesi/api/user/find/${prestaId}`);
+                if (!prestaResponse.ok) throw new Error('Problème lors de la récupération des infos du prestataire.');
+                const prestaInfo = await prestaResponse.json();
+
+                const updatedPrestaSoldServiceIds = prestaInfo.sold_service_ids ? [...prestaInfo.sold_service_ids, sold_service_id] : [sold_service_id];
+                await fetch(`http://peer.cesi/api/user/update/${prestaId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...prestaInfo, sold_service_ids: updatedPrestaSoldServiceIds }),
+                });
+            }
+
+            alert('Service acheté avec succès!');
+        } catch (error) {
+            alert('Erreur lors de l\'achat du service: ' + error.message);
         }
-      };
+    };
 
-      onMounted(fetchServiceDetails);
+        onMounted(fetchServiceDetails);
 
-      return {
+        return {
         service,
-        buyService,
-      };
+        buyService, // Assurez-vous d'ajouter cette nouvelle méthode
+        };
     },
   });
   </script>
