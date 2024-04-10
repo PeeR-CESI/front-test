@@ -1,25 +1,50 @@
 <template>
-  <div>
-    <h2>Inscription</h2>
-    <form @submit.prevent="createUser">
-      <input v-model="nom" type="text" placeholder="Nom" />
-      <input v-model="prenom" type="text" placeholder="Prénom" />
-      <input v-model="email" type="email" placeholder="Email" />
-      <input v-model="adresse" type="text" placeholder="Adresse" />
-      <select v-model="role">
-        <option value="demandeur">Demandeur</option>
-        <option value="presta">Prestataire</option>
-      </select>
-      <input v-model="username" type="text" placeholder="Username" />
-      <input v-model="password" type="password" placeholder="Password" />
-      <button type="submit">S'inscrire</button>
-    </form>
+  <div class="registration-container">
+    <div class="registration-box">
+      <img :src="logoPath" alt="Logo" class="logo"/>
+      <h2>Inscription</h2>
+      <form @submit.prevent="createUser" class="form">
+        <div class="form-group">
+          <input v-model="nom" type="text" placeholder="Nom" class="input-field"/>
+        </div>
+        <div class="form-group">
+          <input v-model="prenom" type="text" placeholder="Prénom" class="input-field"/>
+        </div>
+        <div class="form-group">
+          <input v-model="email" type="email" placeholder="Email" class="input-field"/>
+        </div>
+        <div class="form-group">
+          <input v-model="adresse" type="text" placeholder="Adresse" class="input-field"/>
+        </div>
+        <div class="form-group">
+          <select v-model="role" class="input-field">
+            <option value="demandeur">Demandeur</option>
+            <option value="presta">Prestataire</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <input v-model="username" type="text" placeholder="Username" class="input-field"/>
+        </div>
+        <div class="form-group">
+          <input v-model="password" type="password" placeholder="Password" class="input-field"/>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn">S'inscrire</button>
+        </div>
+        <div class="form-actions">
+          <p>Déjà un compte ? Connecte toi :</p>
+          <button type="submit" class="btn" @click="goToLogin" >Connexion</button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import router from "../router";
+import logoPath from '../assets/image.png';
+
 
 export default defineComponent({
   name: 'InscriptionPage',
@@ -64,6 +89,10 @@ export default defineComponent({
 
     };
 
+    const goToLogin = () => {
+      router.push('/login');
+    };
+
 
     return {
       nom,
@@ -74,7 +103,59 @@ export default defineComponent({
       username,
       password,
       createUser,
+      logoPath,
+      goToLogin
     };
   },
 });
 </script>
+
+<style scoped>
+.registration-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f2f2f2;
+}
+
+.registration-box {
+  padding: 2rem;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 100%;
+  max-width: 400px; /* Vous pouvez ajuster la largeur maximale si nécessaire */
+}
+
+.logo {
+  width: 150px;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-actions {
+  margin-top: 1rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  background-color: #0055ff;
+  color: white;
+}
+</style>

@@ -1,21 +1,19 @@
 <template>
   <div class="home">
     <h1>Bienvenue, {{ username }}</h1>
-    <button @click="goToSettings">Paramètres</button>
-    <!-- Bouton pour ouvrir le pop-up de parrainage -->
-    <button @click="showSponsorModal = true">Parrainer un ami</button>
-
-    <!-- Pop-up de parrainage -->
-    <div v-if="showSponsorModal" class="modal">
-      <h2>Parrainer un ami pour bénéficier d'avantages exclusifs</h2>
-      <p>Parrainer un ami pour bénéficier d'avantages exclusifs tels que la mise en avant de vos services sur notre site ou -10% sur votre prochaine achat.</p>
-      <input v-model="sponsorEmail" type="email" placeholder="Email de l'ami" />
-      <button @click="sendSponsorEmail">Envoyer</button>
-      <button @click="showSponsorModal = false">Fermer</button>
-    </div>
-    <button @click="goToUserList">Voir les utilisateurs</button>
+    <!-- Bouton visible uniquement pour les utilisateurs "presta" -->
+    <button v-if="role === 'presta'" class="create-service-button" @click="goToCreateService">Créer un service</button>
+    <h2>Retrouvez ici quelques services proposés par la communauté :</h2>
     <div class="services-container">
-      <div class="service-card" v-for="service in services" :key="service.nom">
+      <div
+          class="service-card"
+          v-for="service in services"
+          :key="service._id"
+          @click="navigateToService(service._id)"
+      >
+        <div class="service-image">
+          <img :src="serviceImage" alt="Service image" />
+        </div>
         <h3>{{ service.nom }}</h3>
         <p>{{ service.description }}</p>
         <p class="price">{{ service.price }}</p>
@@ -27,9 +25,11 @@
 <script lang="ts">
 import { defineComponent, computed, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import serviceImage from '../assets/bureau.jpg';
 
 // Définir l'interface pour un service
 interface Service {
+  _id: number;
   nom: string;
   description: string;
   price: string;
@@ -41,6 +41,15 @@ export default defineComponent({
     const router = useRouter();
     const username = computed(() => localStorage.getItem('username'));
     const services = ref<Service[]>([]); // Utiliser l'interface Service ici
+    const role = computed(() => localStorage.getItem('role'));
+
+    const navigateToService = (id: number) => {
+      router.push(`/service/display/${id}`);
+    };
+
+    const goToCreateService = () => {
+      router.push('/service/create');
+    };
 
     const goToUserList = () => {
       router.push('/user-list'); // Assurez-vous que le chemin correspond à celui défini dans le router
@@ -57,6 +66,15 @@ export default defineComponent({
         console.error(error);
       }
     });
+
+    const logout = () => {
+      // Supprimez le token et d'autres données de l'utilisateur stockées localement
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('username');
+      // Redirigez l'utilisateur vers la page de connexion
+      router.push('/login');
+    };
 
     const goToSettings = () => {
       router.push('/account/parameters');
@@ -97,6 +115,11 @@ export default defineComponent({
       sponsorEmail,
       sendSponsorEmail,
       goToUserList,
+      logout,
+      role,
+      goToCreateService,
+      navigateToService,
+      serviceImage,
     };
   },
 });
@@ -114,6 +137,26 @@ export default defineComponent({
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
+.service-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.service-card:hover {
+  transform: scale(1.05);
+}
+
+.service-image img {
+  width: 100%; /* Ajustez comme nécessaire */
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
 .home {
   padding: 2rem;
 }
@@ -128,11 +171,28 @@ export default defineComponent({
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 1rem;
-  width: calc(33.333% - 1rem); /* Ajuster en fonction de la largeur de la carte */
+  width: calc(20% - 1rem); /* Ajuster en fonction de la largeur de la carte */
 }
 
 .price {
   color: green;
   font-weight: bold;
+}
+
+.create-service-button {
+  background-color: white; /* Fond blanc ou toute autre couleur appropriée */
+  color: #4CAF50; /* Couleur verte pour le texte, ajustable selon le besoin */
+  border: 2px solid #4CAF50; /* Bordure verte */
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 20px; /* Espace au-dessus du bouton */
+  transition: background-color 0.3s, color 0.3s; /* Animation de transition */
+}
+
+.create-service-button:hover {
+  background-color: #4CAF50; /* Couleur de fond lors du survol */
+  color: white; /* Couleur du texte lors du survol */
 }
 </style>

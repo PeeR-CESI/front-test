@@ -11,6 +11,7 @@ import UserListPage from '../views/UserListView.vue';
 import UserDetailsPage from '../views/UserDetailsView.vue';
 import SoldServicePage from "../views/SoldServiceView.vue";
 import MyServicesPage from "../views/MyServicesView.vue";
+import ForumPage from "../views/ForumView.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -96,16 +97,42 @@ const routes: Array<RouteRecordRaw> = [
         path: '/user-list',
         name: 'UserList',
         component: UserListPage,
+        beforeEnter: (to, from, next) => {
+            if (localStorage.getItem('access_token')) {
+                next();
+            } else {
+                next({ name: 'Login' }); // Redirige vers la page de connexion si aucun token n'est trouvé
+            }
+        },
     },
     {
         path: '/user-details/:id',
         name: 'UserDetails',
         component: UserDetailsPage,
+        beforeEnter: (to, from, next) => {
+            if (localStorage.getItem('access_token')) {
+                next();
+            } else {
+                next({ name: 'Login' }); // Redirige vers la page de connexion si aucun token n'est trouvé
+            }
+        },
     },
     {
         path: '/myservices',
         name: 'MyServices',
         component: MyServicesPage,
+    },
+    {
+        path: '/forum',
+        name: 'Forum',
+        component: ForumPage,
+        beforeEnter: (to, from, next) => {
+            if (localStorage.getItem('access_token')) {
+                next();
+            } else {
+                next({ name: 'Login' }); // Redirige vers la page de connexion si aucun token n'est trouvé
+            }
+        },
     },
 ];
 

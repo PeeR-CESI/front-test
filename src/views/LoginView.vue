@@ -1,27 +1,33 @@
 <template>
-  <div>
-    <h2>Login</h2>
-    <form @submit.prevent="login">
-      <div>
-        <label for="username">Username:</label>
-        <input id="username" v-model="credentials.username" type="text" required>
-      </div>
-      <div>
-        <label for="password">Password:</label>
-        <input id="password" v-model="credentials.password" type="password" required>
-      </div>
-      <button type="submit">Login</button>
-      <div v-if="error">
-        <p>{{ errorMessage }}</p>
-      </div>
-      <button @click="goToInscription">Inscription</button>
-    </form>
+  <div class="login-container">
+    <div class="login-box">
+      <img :src="logoPath" alt="Logo" class="logo"/>
+      <h2>Login</h2>
+      <form @submit.prevent="login">
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input id="username" v-model="credentials.username" type="text" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input id="password" v-model="credentials.password" type="password" required>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-login">Connexion</button>
+          <button type="button" class="btn-register" @click="goToInscription">Inscription</button>
+        </div>
+        <div v-if="error" class="error-message">
+          <p>{{ errorMessage }}</p>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRouter } from "vue-router";
+import logoPath from '../assets/image.png';
 
 export default defineComponent({
   name: 'LoginPage',
@@ -35,7 +41,7 @@ export default defineComponent({
     const errorMessage = ref('');
 
     const goToInscription = () => {
-      router.push('/inscription');
+      router.push('/register');
     };
 
     const login = async () => {
@@ -60,6 +66,8 @@ export default defineComponent({
         localStorage.setItem('access_token', data.access_token);
         localStorage.setItem('refresh_token', data.refresh_token);
         localStorage.setItem('user_id', data.user_id);
+        localStorage.setItem('role', data.role);
+        localStorage.setItem('username', data.username);
         // Redirection vers la page d'accueil
         router.push('/home');
       } catch (err) {
@@ -84,11 +92,71 @@ export default defineComponent({
       errorMessage,
       login,
       goToInscription,
+      logoPath
     };
   },
 });
 </script>
 
 <style scoped>
-/* Vos styles ici */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f2f2f2;
+}
+
+.login-box {
+  padding: 2rem;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.logo {
+  width: 150px;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-actions {
+  margin-top: 1rem;
+}
+
+.btn-login,
+.btn-register {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+
+.btn-login {
+  background-color: #0055ff;
+  color: white;
+}
+
+.btn-register {
+  background-color: transparent;
+  color: #0055ff;
+  border: 1px solid #0055ff;
+}
+
+.error-message {
+  color: #ff0000;
+  margin-top: 1rem;
+}
 </style>
