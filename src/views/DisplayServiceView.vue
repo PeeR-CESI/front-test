@@ -36,6 +36,7 @@ Résultat attendu :
 <script lang="ts">
 import { defineComponent, onMounted, ref, Ref} from 'vue';
 import { useRoute } from 'vue-router';
+import router from "../router";
 
 interface Service {
   nom: string;
@@ -72,6 +73,14 @@ export default defineComponent({
       if (!service.value) return;
       const serviceId = route.params.service_id;
       const userId = localStorage.getItem('user_id'); // Assurez-vous que l'ID utilisateur est correctement stocké lors de la connexion
+      
+      if (!userId) {
+        // Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
+        alert("Vous devez vous connecter pour acheter un service.");
+        router.push('/login');
+        return; // Quitte la méthode pour éviter de continuer sans utilisateur connecté
+      }
+      
       try {
           // 1. Vendre le service
           const sellResponse = await fetch('http://peer.cesi/api/service/sell/', {
