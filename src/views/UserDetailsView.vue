@@ -59,7 +59,7 @@ export default defineComponent({
 
     const loadDetails = async () => {
       try {
-        const response = await fetch(`http://peer.cesi:5000/review/${userId}`);
+        const response = await fetch(`http://peer.cesi/api/review/${userId}`);
         if (!response.ok) {
           throw new Error(`Erreur HTTP : ${response.status}`);
         }
@@ -76,7 +76,7 @@ export default defineComponent({
 
     const addReview = async () => {
       try {
-        const response = await fetch(`http://peer.cesi:5000/review/add`, {
+        const response = await fetch(`http://peer.cesi/api/review/add`, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(newReview),
