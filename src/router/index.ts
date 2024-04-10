@@ -87,9 +87,9 @@ const routes: Array<RouteRecordRaw> = [
         props: true,
     },
     {
-        path: '/myorders',
-        name: 'MyOrders',
-        component: BoughtServicePage,
+        path: '/myprestations',
+        name: 'MyPrestations',
+        component: SoldServicePage,
         props: true,
     },
     {
