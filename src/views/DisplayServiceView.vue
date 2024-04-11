@@ -27,10 +27,8 @@ Résultat attendu :
     <p><strong>Description:</strong> {{ service.description }}</p>
     <p><strong>Prix:</strong> {{ service.price }}</p>
     
-    <!-- Bouton Modifier mon service -->
     <button v-if="isOwnerOrAdmin" @click="navigateToModifyService">Modifier le service</button>
     
-    <!-- Bouton Supprimer mon service -->
     <button v-if="isOwnerOrAdmin" @click="deleteServiceConfirmation" class="delete-button">Supprimer le service</button>
     
   </div>
@@ -74,7 +72,6 @@ export default defineComponent({
     let userId = '';
     let userRole = '';
 
-    // Utiliser le token pour définir userId et userRole
     const token = localStorage.getItem('access_token');
     if (token) {
       const decoded = decodeToken(token);
@@ -88,38 +85,36 @@ export default defineComponent({
   
     const fetchServiceDetails = async () => {
       try {
-        const serviceId = route.params.service_id; // Récupère l'ID du service depuis l'URL
+        const serviceId = route.params.service_id;
         const response = await fetch(`http://peer.cesi/api/service/${serviceId}`);
         if (!response.ok) {
           throw new Error(`Erreur lors de la récupération du service: ${response.status}`);
         }
         const data = await response.json();
-        service.value = data; // Stockez les données du service récupéré dans la variable réactive 'service'
+        service.value = data;
       } catch (error) {
         console.error('Erreur lors de la récupération du service:', error instanceof Error ? error.message : error);
-        service.value = null; // En cas d'erreur, réinitialiser 'service' pour indiquer une erreur de chargement
+        service.value = null;
       }
     };
   
     const buyService = async () => {
       if (!service.value) return;
-      const userId = localStorage.getItem('user_id'); // Assurez-vous que l'ID utilisateur est correctement stocké lors de la connexion
+      const userId = localStorage.getItem('user_id');
       
       if (!userId) {
-        // Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
         alert("Vous devez vous connecter pour acheter un service.");
         router.push('/login');
-        return; // Quitte la méthode pour éviter de continuer sans utilisateur connecté
+        return;
       }
       
       try {
-          // 1. Vendre le service
           const sellResponse = await fetch('http://peer.cesi/api/service/sell/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               service_id: service.value._id,
-              demandeur_id: userId, // ID de l'utilisateur connecté
+              demandeur_id: userId,
               advancement: 0,
             }),
           });
@@ -174,7 +169,7 @@ export default defineComponent({
     const deleteServiceConfirmation = async () => {
       if (service.value?._id && confirm('Êtes-vous sûr de vouloir supprimer ce service ?')) {
         try {
-          // Étape 2: Suppression du service
+          // Étape 1: Suppression du service
           const deleteResponse = await fetch(`http://peer.cesi/api/service/delete/${service.value._id}`, {
             method: 'DELETE'
           });
@@ -182,7 +177,7 @@ export default defineComponent({
             throw new Error('Erreur lors de la suppression du service');
           }
           
-          // Étape 1: Récupération des informations actuelles du prestataire
+          // Étape 2: Récupération des informations actuelles du prestataire
           const prestaResponse = await fetch(`http://peer.cesi/api/user/find/${service.value.presta_id}`);
           if (!prestaResponse.ok) throw new Error('Erreur lors de la récupération des infos du prestataire.');
           const prestaInfo = await prestaResponse.json();
@@ -223,7 +218,6 @@ export default defineComponent({
 </script>
   
 <style scoped>
-/* Conteneur principal pour un alignement centré et un design épuré */
 div {
   max-width: 800px;
   margin: 20px auto;
@@ -234,26 +228,22 @@ div {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Style des titres pour plus de visibilité */
 h2 {
   color: #333;
   text-align: center;
   margin-bottom: 20px;
 }
 
-/* Amélioration de la lisibilité du texte */
 p {
   color: #666;
   line-height: 1.6;
   margin: 10px 0;
 }
 
-/* Mise en évidence des éléments clés */
 strong {
   color: #333;
 }
 
-/* Style des boutons pour une meilleure interaction utilisateur */
 button {
   background-color: #007bff;
   color: white;
@@ -265,13 +255,12 @@ button {
   margin-right: 10px;
 }
 
-/* Style spécifique pour le bouton supprimer */
 .delete-button {
-  background-color: #dc3545; /* Rouge par défaut pour le bouton Supprimer */
+  background-color: #dc3545;
 }
 
 .delete-button:hover {
-  background-color: #c82333; /* Rouge plus foncé au survol */
+  background-color: #c82333;
 }
 
 button:hover {

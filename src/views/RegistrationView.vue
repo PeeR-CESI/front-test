@@ -81,7 +81,7 @@ export default defineComponent({
 
         const userData  = await response.json();
         console.log('Utilisateur créé:', userData );
-        router.push('/login'); // Redirection vers la page de connexion
+        router.push('/login');
 
       } catch (error) {
         console.error('Erreur:', error);
@@ -126,7 +126,7 @@ export default defineComponent({
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   width: 100%;
-  max-width: 400px; /* Vous pouvez ajuster la largeur maximale si nécessaire */
+  max-width: 400px;
 }
 
 .logo {

@@ -51,7 +51,7 @@ export default defineComponent({
     const myServices = ref<Service[]>([]);
     const loading = ref(true);
     const errorMessage = ref('');
-    const userRole = ref(''); // Ne changez pas cette déclaration.
+    const userRole = ref('');
 
     const sectionTitle = computed(() => {
       return userRole.value === 'admin' ? 'Tous les services' : 'Mes services';
@@ -77,10 +77,9 @@ export default defineComponent({
         return;
       }
 
-      userRole.value = decoded.role; // Modifiez directement la réf. Ne redéclarez pas.
+      userRole.value = decoded.role;
       const userId = decoded.user_id;
 
-      // Les administrateurs obtiennent tous les services
       if (userRole.value === 'admin') {
         try {
           const response = await fetch('http://peer.cesi/api/service/all');
@@ -91,7 +90,6 @@ export default defineComponent({
           errorMessage.value = "Erreur lors de la récupération des services.";
         }
       } else if (userRole.value === 'presta') {
-        // Les prestataires obtiennent uniquement leurs services
         try {
           const userInfoResponse = await fetch(`http://peer.cesi/api/user/find/${userId}`);
           if (!userInfoResponse.ok) throw new Error('Impossible de récupérer les informations de l’utilisateur.');

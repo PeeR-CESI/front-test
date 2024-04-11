@@ -66,14 +66,12 @@ export default defineComponent({
         const decoded = decodeToken(token);
         userId.value = decoded.user_id;
 
-        // Ici, on modifie la condition pour exclure les utilisateurs n'ayant pas les rôles "presta" ou "admin"
         if (decoded.role !== "presta" && decoded.role !== "admin") {
           alert("Vous n'avez pas les permissions pour créer un service. Si vous êtes prestataire, mettez à jour votre profil.");
           router.push('/home');
           return;
         }
       } else {
-        // Si aucun token n'est trouvé, rediriger l'utilisateur vers la page de connexion
         alert("Vous n'êtes pas connectés, veuillez vous connecter.");
         router.push('/login');
       }
@@ -150,7 +148,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Styles conservés tels quels */
 form {
   display: flex;
   flex-direction: column;

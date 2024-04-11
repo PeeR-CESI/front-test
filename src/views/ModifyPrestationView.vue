@@ -48,7 +48,7 @@ export default defineComponent({
     const description = ref('');
     const price = ref(0);
     const status = ref('');
-    const advancement = ref(1); // Initialisé à 1 pour correspondre à nos nouvelles options
+    const advancement = ref(1);
     const router = useRouter();
     const route = useRoute();
     const soldServiceId = route.params.sold_service_id;
@@ -68,7 +68,6 @@ export default defineComponent({
     };
 
     watch(advancement, (newValue) => {
-      // Ajustement automatique du statut en fonction de l'avancement
       switch (newValue) {
         case 1:
           status.value = 'en attente';
@@ -77,7 +76,6 @@ export default defineComponent({
           status.value = 'terminé';
           break;
         default:
-          // Pas de mise à jour du statut pour les autres valeurs
           break;
       }
     });
@@ -138,7 +136,7 @@ export default defineComponent({
 }
 
 .modify-prestation h2 {
-  color: #30475e; /* Conserve la couleur similaire à celle de l'exemple */
+  color: #30475e;
   margin-bottom: 1.5rem;
   text-align: center;
 }
@@ -156,7 +154,7 @@ form > div {
 
 label {
   margin-bottom: .5rem;
-  color: #30475e; /* Assortir la couleur du texte à celle de l'exemple */
+  color: #30475e;
 }
 
 input[type="text"],
@@ -166,11 +164,9 @@ select {
   padding: .8rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  /* Alignement des éléments pour qu'ils aient la même largeur */
   width: 100%;
 }
 
-/* Alignement des champs de formulaire pour éviter tout décalage */
 .form-group {
   display: flex;
   align-items: center;
@@ -178,22 +174,21 @@ select {
 }
 
 .form-group label {
-  /* Ajustement pour que les labels ne prennent pas toute la largeur et permettent l'alignement des champs */
   flex-basis: 20%;
-  margin-bottom: 0; /* Enlève la marge pour aligner avec le champ de saisie */
+  margin-bottom: 0;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-  flex-basis: 75%; /* Ajuste la largeur des champs de saisie */
+  flex-basis: 75%;
 }
 
 button {
   padding: .8rem 2rem;
   margin-top: .5rem;
   color: #fff;
-  background-color: #30475e; /* Assortir la couleur du bouton à celle de l'exemple */
+  background-color: #30475e;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -201,6 +196,6 @@ button {
 }
 
 button:hover {
-  background-color: #1b2a49; /* Assombrir le bouton au survol */
+  background-color: #1b2a49;
 }
 </style>

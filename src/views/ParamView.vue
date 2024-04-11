@@ -58,7 +58,7 @@ export default defineComponent({
       username: '',
       password: '',
     });
-    const userId = localStorage.getItem('user_id'); // Récupération de l'ID utilisateur
+    const userId = localStorage.getItem('user_id');
 
     const updateUser = async () => {
       if (!userId) {
@@ -81,11 +81,10 @@ export default defineComponent({
         }
 
         console.log('Compte mis à jour avec succès');
-        alert('Compte mis à jour avec succès'); // Affichez un message d'alerte ou utilisez une autre méthode pour notifier l'utilisateur.
-        // Redirigez l'utilisateur ou affichez un message, par exemple avec router.push('/quelquepart');
+        alert('Compte mis à jour avec succès');
       } catch (error) {
         console.error("Erreur lors de la mise à jour du compte :", error);
-        alert("Erreur lors de la mise à jour du compte : " + error); // Informez l'utilisateur de l'erreur.
+        alert("Erreur lors de la mise à jour du compte : " + error);
       }
     };
 
@@ -94,7 +93,6 @@ export default defineComponent({
         try {
           const response = await fetch(`http://peer.cesi:5000/user/delete/${userId}`, {
             method: 'DELETE',
-            // Assurez-vous d'ajouter les headers nécessaires, par exemple pour l'authentification
           });
 
           if (!response.ok) {
@@ -102,8 +100,8 @@ export default defineComponent({
           }
 
           alert('Compte supprimé avec succès.');
-          localStorage.clear(); // Supprimez toutes les données stockées pour l'utilisateur
-          router.push('/login'); // Redirigez l'utilisateur vers la page de connexion
+          localStorage.clear();
+          router.push('/login');
         } catch (error) {
           console.error("Erreur lors de la suppression du compte :", error);
           alert('Erreur lors de la suppression du compte.');
@@ -167,19 +165,19 @@ select {
 
 .buttons {
   display: flex;
-  flex-direction: column; /* Changez à la disposition en colonne pour l'alignement vertical */
+  flex-direction: column;
 }
 
 button {
   padding: .8rem 2rem;
-  margin: .5rem 0 0 0; /* Ajustez la marge pour supprimer l'espace à gauche du premier bouton et entre les boutons */
+  margin: .5rem 0 0 0;
   color: #fff;
   background-color: #30475e;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
-  width: 100%; /* Les boutons s'étendent à la pleine largeur */
+  width: 100%;
 }
 
 button:hover {

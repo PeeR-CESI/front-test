@@ -14,14 +14,12 @@
         <button v-if="userRole === 'presta'" @click="navigateToMyPrestations">Mes prestations</button>
         <button v-if="userRole === 'admin'" @click="navigateToServicesAdministrations">Administration des services</button>
         <button v-if="userRole === 'admin'" @click="navigateToPrestationsAdministrations">Administration des prestations</button>
-        <!-- Bouton pour accéder aux statistiques visible uniquement pour l'admin -->
         <button v-if="userRole === 'admin'" @click="navigateToStatistics">Statistiques</button>
         <button v-if="userRole === 'dev'" @click="navigateToMyPrestations">Mes prestations</button>
         <button @click="logout">Déconnexion</button>
       </div>
     </div>
   </nav>
-  <!-- Modal pour parrainage -->
   <div v-if="showSponsorModal" class="modal">
     <div class="modal-content">
       <h2>Parrainer un ami pour bénéficier d'avantages exclusifs</h2>
@@ -67,7 +65,6 @@ export default defineComponent({
       router.push('/myprestations');
     };
 
-    // Méthode pour naviguer vers la page des statistiques
     const navigateToStatistics = () => {
       router.push('/admin/statistics');
     };
@@ -111,7 +108,6 @@ export default defineComponent({
           throw new Error('Erreur lors de l\'envoi de l\'email');
         }
 
-        // Réinitialisation pour fermer le pop-up et nettoyer le champ email
         showSponsorModal.value = false;
         sponsorEmail.value = '';
 
@@ -148,7 +144,7 @@ export default defineComponent({
 
 <style scoped>
 .navbar {
-  background-color: #e1e1e1; /* Choisir votre couleur */
+  background-color: #e1e1e1;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -176,8 +172,8 @@ export default defineComponent({
   flex-grow: 1;
   margin: 0 1rem;
   padding: 0.5rem;
-  border: 1px solid #ccc; /* Ajout d'une bordure pour définir clairement la zone de recherche */
-  border-radius: 4px; /* Bordures arrondies pour la barre de recherche */
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .navbar-menu {
@@ -191,24 +187,24 @@ export default defineComponent({
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: #000000; /* Texte noir pour contraster avec le fond */
+  color: #000000;
 }
 
 .dropdown-content {
   display: flex;
-  flex-direction: column; /* Orientation verticale des éléments */
+  flex-direction: column;
   position: absolute;
   right: 1rem;
   top: 48px;
   background-color: #f9f9f9;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  padding: 0; /* Enlever le padding ici pour permettre aux séparateurs de s'étendre sur toute la largeur */
+  padding: 0;
   z-index: 1;
-  border-radius: 8px; /* Bordures arrondies pour le menu */
+  border-radius: 8px;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-20px);
-  transition: all 0.3s ease; /* Transition douce pour l'apparition */
+  transition: all 0.3s ease;
   z-index: 1050;
 }
 
@@ -223,20 +219,20 @@ export default defineComponent({
   font-size: 1rem;
   background: none;
   border: none;
-  padding: 10px 20px; /* Ajout d'un padding horizontal pour aligner le texte */
+  padding: 10px 20px;
   width: 100%;
   cursor: pointer;
   color: #333;
-  white-space: nowrap; /* Empêche le retour à la ligne du texte */
-  border-bottom: 1px solid #ddd; /* Ajoute des séparateurs entre les boutons */
-  transition: background-color 0.2s; /* Effet de survol plus réactif */
+  white-space: nowrap;
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.2s;
 }
 
 .dropdown-content button:hover {
-  background-color: #ddd; /* Couleur de fond plus claire au survol */
+  background-color: #ddd;
 }
 
 .dropdown-content button:last-child {
-  border-bottom: none; /* Enlève le séparateur du dernier élément */
+  border-bottom: none;
 }
 </style>
