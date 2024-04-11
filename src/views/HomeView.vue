@@ -16,7 +16,7 @@
         </div>
         <h3>{{ service.nom }}</h3>
         <p>{{ service.description }}</p>
-        <p class="price">{{ service.price }}</p>
+        <p class="price">{{ service.price }} €</p>
       </div>
     </div>
   </div>

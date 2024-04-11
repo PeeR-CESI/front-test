@@ -23,136 +23,162 @@ Résultat attendu :
 */
 
 <template>
-    <div class="modify-service">
-      <h2>Modifier vos Services</h2>
-      <form @submit.prevent="updateService">
-        <div>
-          <label for="nom">Nom du service:</label>
-          <input id="nom" v-model="nom" type="text" required>
-        </div>
-        <div>
-          <label for="description">Description:</label>
-          <textarea id="description" v-model="description" required></textarea>
-        </div>
-        <button type="submit">Mettre à jour le service</button>
-      </form>
-    </div>
-  </template>
-  
-  <script lang="ts">
-  import { defineComponent, ref, onMounted } from 'vue';
-  import { useRoute, useRouter } from 'vue-router';
-  
-  export default defineComponent({
-    setup() {
-      const nom = ref('');
-      const description = ref('');
-      const route = useRoute();
-      const router = useRouter();
-      const serviceId = route.params.service_id;
-  
-      const fetchServiceDetails = async () => {
-        const response = await fetch(`http://peer.cesi/api/service/${serviceId}`);
-        if (response.ok) {
-          const data = await response.json();
-          nom.value = data.nom;
-          description.value = data.description;
-        } else {
-          console.error('Erreur lors de la récupération du service');
+  <div class="modify-service">
+    <h2>Modifier vos Services</h2>
+    <form @submit.prevent="updateService">
+      <div>
+        <label for="nom">Nom du service:</label>
+        <input id="nom" v-model="nom" type="text" required>
+      </div>
+      <div>
+        <label for="description">Description:</label>
+        <textarea id="description" v-model="description" required></textarea>
+      </div>
+      <div>
+        <label for="price">Prix:</label>
+        <input id="price" v-model="price" type="number" required>
+      </div>
+      <button type="submit">Mettre à jour le service</button>
+    </form>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+
+export default defineComponent({
+  setup() {
+    const nom = ref('');
+    const description = ref('');
+    const price = ref(''); // Ajout de la référence pour le prix
+    const route = useRoute();
+    const router = useRouter();
+    const serviceId = route.params.service_id;
+
+    const fetchServiceDetails = async () => {
+      const response = await fetch(`http://peer.cesi/api/service/${serviceId}`);
+      if (response.ok) {
+        const data = await response.json();
+        nom.value = data.nom;
+        description.value = data.description;
+        price.value = data.price; // Récupération du prix
+      } else {
+        console.error('Erreur lors de la récupération du service');
+      }
+    };
+
+    const updateService = async () => {
+      try {
+        const response = await fetch(`http://peer.cesi/api/service/update/${serviceId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            nom: nom.value,
+            description: description.value,
+            price: price.value, // Envoi du prix modifié
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Erreur lors de la mise à jour du service: ${response.status}`);
         }
-      };
-  
-      const updateService = async () => {
-        try {
-          const response = await fetch(`http://peer.cesi/api/service/update/${serviceId}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              nom: nom.value,
-              description: description.value,
-            }),
-          });
-  
-          if (!response.ok) {
-            throw new Error(`Erreur lors de la mise à jour du service: ${response.status}`);
-          }
-  
-          alert('Service mis à jour avec succès!');
-          router.push(`/service/display/${serviceId}`);
-        } catch (error) {
-          if (error instanceof Error) {
-            console.error('Erreur lors de la mise à jour du service:', error.message);
-            alert(`Erreur lors de la mise à jour du service: ${error.message}`);
-          }
+
+        alert('Service mis à jour avec succès!');
+        router.push(`/service/display/${serviceId}`);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error('Erreur lors de la mise à jour du service:', error.message);
+          alert(`Erreur lors de la mise à jour du service: ${error.message}`);
         }
-      };
+      }
+    };
+
+    onMounted(fetchServiceDetails);
+
+    return {
+      nom,
+      description,
+      price, // Exposition de la référence pour le prix
+      updateService,
+    };
+  },
+});
+</script>
   
-      onMounted(fetchServiceDetails);
-  
-      return {
-        nom,
-        description,
-        updateService,
-      };
-    },
-  });
-  </script>
-  
-<style scoped>.modify-service {
-    max-width: 600px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-  }
-  
-  .modify-service h2 {
-    color: #30475e; /* Utilisez la même couleur de titre que celle de la page des prestations */
-    margin-bottom: 1.5rem;
-    text-align: center;
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  form > div {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1.5rem;
-  }
-  
-  label {
-    margin-bottom: .5rem;
-    color: #30475e; /* Assortir la couleur du label à celle de la page des prestations */
-  }
-  
-  input[type="text"],
-  textarea {
-    padding: .8rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 100%; /* Assurez-vous que les champs de saisie s'étendent à la largeur complète */
-  }
-  
-  button {
-    padding: .8rem 2rem;
-    margin-top: .5rem; /* Ajuster la marge supérieure pour correspondre à celle de la page des prestations */
-    color: #fff;
-    background-color: #30475e; /* Assortir la couleur du bouton à celle de la page des prestations */
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  button:hover {
-    background-color: #1b2a49; /* Assombrir le bouton au survol, comme sur la page des prestations */
-  }
-  
+<style scoped>
+.modify-service {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.modify-service h2 {
+  color: #30475e; /* Conserve la même couleur de titre */
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form > div {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+}
+
+label {
+  margin-bottom: .5rem;
+  color: #30475e; /* Assortir la couleur du label */
+}
+
+input[type="text"],
+textarea,
+input[type="number"],
+select {
+  padding: .8rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%; /* Assurer l'alignement et la largeur uniforme des champs */
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-group label {
+  flex-basis: 20%;
+  margin-bottom: 0; /* Ajuster la marge pour l'alignement */
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  flex-basis: 75%; /* Ajuster la largeur pour l'alignement */
+}
+
+button {
+  padding: .8rem 2rem;
+  margin-top: .5rem;
+  color: #fff;
+  background-color: #30475e; /* Style du bouton uniforme */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #1b2a49; /* Effet au survol pour le bouton */
+}
 </style>
-  

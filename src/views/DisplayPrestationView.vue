@@ -1,26 +1,23 @@
 <template>
-    <div v-if="soldService">
-      <h2>Détails de la Prestation</h2>
-      <p><strong>Nom:</strong> {{ soldService.name }}</p>
-      <p><strong>Description:</strong> {{ soldService.description }}</p>
-      <p><strong>Prix:</strong> {{ soldService.price }}</p>
-      <p><strong>Statut:</strong> {{ soldService.status }}</p>
-      <p><strong>Avancement:</strong> {{ soldService.advancement }}%</p>
-  
-      <!-- Nouveaux boutons pour valider ou refuser une prestation -->
-      <button v-if="canValidateOrRefuse && soldService.status === 'en attente'" @click="updateStatus('validé')">Valider</button>
-      <button v-if="canValidateOrRefuse && soldService.status === 'en attente'" @click="updateStatus('refusé')">Refuser</button>
-  
-      <!-- Mise à jour de la condition pour le bouton Modifier -->
-      <button v-if="canModify" @click="modifyPrestation">Modifier la demande</button>
-  
-      <!-- Mise à jour de la condition pour le bouton Supprimer -->
-      <button v-if="canDelete" @click="deletePrestationConfirmation" class="delete-button">Supprimer la prestation</button>
+  <div v-if="soldService">
+    <h2>Détails de la Prestation</h2>
+    <p><strong>Nom:</strong> {{ soldService.name }}</p>
+    <p><strong>Description:</strong> {{ soldService.description }}</p>
+    <p><strong>Prix:</strong> {{ soldService.price }}</p>
+    <p><strong>Statut:</strong> {{ soldService.status }}</p>
+    <p><strong>Avancement:</strong></p>
+    <div class="progress-container">
+      <div :class="`progress-bar level-${soldService.advancement}`"></div>
     </div>
-    <div v-else>
-      <p>Chargement des détails de la prestation ou prestation non trouvée...</p>
-    </div>
-  </template>
+    <button v-if="canValidateOrRefuse && soldService.status === 'en attente'" @click="updateStatus('validé')">Valider</button>
+    <button v-if="canValidateOrRefuse && soldService.status === 'en attente'" @click="updateStatus('refusé')">Refuser</button>
+    <button v-if="canModify" @click="modifyPrestation">Modifier la demande</button>
+    <button v-if="canDelete" @click="deletePrestationConfirmation" class="delete-button">Supprimer la prestation</button>
+  </div>
+  <div v-else>
+    <p>Chargement des détails de la prestation ou prestation non trouvée...</p>
+  </div>
+</template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, Ref, computed } from 'vue';
@@ -72,10 +69,16 @@ export default defineComponent({
     });
 
     const canModify = computed(() => {
+      // Permettre à l'admin de toujours modifier
       if (userRole.value === 'admin') {
         return true;
       }
+      // Permettre au demandeur de modifier si la prestation est en attente
       if (userRole.value === 'demandeur' && soldService.value?.status === 'en attente') {
+        return true;
+      }
+      // Ajouter une condition pour le prestataire pour modifier si le statut est validé ou en cours
+      if (userRole.value === 'presta' && (soldService.value?.status === 'validé' || soldService.value?.status === 'en cours')) {
         return true;
       }
       return false;
@@ -230,9 +233,8 @@ button {
   padding: 10px 15px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-right: 10px;
+  margin-top: 10px; /* Espacement au-dessus des boutons */
 }
-
 /* Style spécifique pour le bouton supprimer */
 .delete-button {
   background-color: #dc3545; /* Rouge par défaut pour le bouton Supprimer */
@@ -245,4 +247,29 @@ button {
 button:hover {
   background-color: #0056b3;
 }
+
+.progress-container {
+  width: 95%;
+  background-color: #e0e0e0; /* Couleur de fond pour le conteneur de la barre de progression */
+  border-radius: 50px;
+  margin-top: 10px; /* Espacement au-dessus de la barre de progression */
+  position: relative; /* Positionnement relatif pour le conteneur */
+}
+
+.progress-bar {
+  position: absolute; /* Positionnement absolu pour la barre elle-même */
+  left: 0; /* Ancrage à gauche */
+  top: 0; /* Ancrage en haut */
+  margin-top: 1px;
+  height: 1%; /* Hauteur ajustée pour visibilité */
+  border-radius: 50px;
+  transition: width 0.4s ease; /* Transition douce lors du changement de largeur */
+}
+
+/* Largeurs spécifiques pour chaque niveau ajustées pour la nouvelle structure */
+.level-1 { width: 5%; background-color: #f9ff3e; }
+.level-2 { width: 25%; background-color: #3e8bff; }
+.level-3 { width: 45%; background-color: #3e8bff; }
+.level-4 { width: 70%; background-color: #3e8bff; }
+.level-5 { width: 95%; background-color: #4caf50; }
 </style>

@@ -1,30 +1,31 @@
 <template>
   <div>
-    <h2>Mes Services</h2>
-    <div v-if="loading">Chargement de mes services...</div>
+    <h2>{{ sectionTitle }}</h2>
+    <div v-if="loading">Chargement...</div>
     <div v-else-if="errorMessage">
       <p>{{ errorMessage }}</p>
     </div>
-    <div v-else-if="myServices.length">
-      <ul>
-        <li v-for="service in myServices" :key="service._id" @click="navigateToService(service._id)" style="cursor: pointer;">
-          <p><strong>Nom du Service:</strong> {{ service.nom }}</p>
-          <p><strong>Description:</strong> {{ service.description }}</p>
-          <p><strong>Prix:</strong> {{ service.price }}€</p>
-        </li>
-      </ul>
-    </div>
     <div v-else>
-      <p>Aucun service trouvé.</p>
+      <div v-if="myServices.length">
+        <ul>
+          <li v-for="service in myServices" :key="service._id" @click="navigateToService(service._id)" style="cursor: pointer;">
+            <p><strong>Nom du Service:</strong> {{ service.nom }}</p>
+            <p><strong>Description:</strong> {{ service.description }}</p>
+            <p><strong>Prix:</strong> {{ service.price }}€</p>
+          </li>
+        </ul>
+      </div>
+      <div v-else>
+        <p>Aucun service trouvé.</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, computed, onMounted, ref } from 'vue';
 import router from "../router";
 
-// Fonction pour décoder le token JWT et récupérer les informations de l'utilisateur
 function decodeToken(token: string): any {
   if (!token) return null;
   const base64Url = token.split('.')[1];
@@ -50,6 +51,11 @@ export default defineComponent({
     const myServices = ref<Service[]>([]);
     const loading = ref(true);
     const errorMessage = ref('');
+    const userRole = ref(''); // Ne changez pas cette déclaration.
+
+    const sectionTitle = computed(() => {
+      return userRole.value === 'admin' ? 'Tous les services' : 'Mes services';
+    });
 
     const navigateToService = (serviceId: string) => {
       router.push({ name: 'DisplayService', params: { service_id: serviceId } });
@@ -71,11 +77,11 @@ export default defineComponent({
         return;
       }
 
-      const userRole = decoded.role;
+      userRole.value = decoded.role; // Modifiez directement la réf. Ne redéclarez pas.
       const userId = decoded.user_id;
 
       // Les administrateurs obtiennent tous les services
-      if (userRole === 'admin') {
+      if (userRole.value === 'admin') {
         try {
           const response = await fetch('http://peer.cesi/api/service/all');
           if (!response.ok) throw new Error('Erreur lors de la récupération de tous les services');
@@ -84,7 +90,7 @@ export default defineComponent({
           console.error('Erreur:', error);
           errorMessage.value = "Erreur lors de la récupération des services.";
         }
-      } else if (userRole === 'presta') {
+      } else if (userRole.value === 'presta') {
         // Les prestataires obtiennent uniquement leurs services
         try {
           const userInfoResponse = await fetch(`http://peer.cesi/api/user/find/${userId}`);
@@ -109,7 +115,7 @@ export default defineComponent({
       loading.value = false;
     });
 
-    return { myServices, loading, errorMessage, navigateToService };
+    return { myServices, loading, errorMessage, navigateToService, sectionTitle };
   },
 });
 </script>
