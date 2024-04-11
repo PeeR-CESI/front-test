@@ -1,27 +1,3 @@
-/*
-Vue "Modifier le Service" :
-- Cette vue permet aux prestataires de modifier les informations d'un service qu'ils ont créé. Les champs modifiables incluent le nom du service et sa description.
-- La vue récupère d'abord les détails actuels du service en utilisant l'ID du service passé en paramètre dans l'URL, permettant au prestataire de voir les informations existantes avant de les modifier.
-- Après modification, un appel API est effectué pour mettre à jour les informations du service dans la base de données. Un message de succès ou d'erreur est affiché selon le résultat de l'opération.
-
-Conditions préalables :
-- L'utilisateur doit être connecté et posséder le rôle de "presta" ou "admin".
-- L'utilisateur doit être le créateur du service qu'il souhaite modifier (cette vérification doit être effectuée côté serveur).
-
-Fonctionnalités :
-- Récupération et affichage des détails actuels du service pour modification.
-- Validation des champs modifiés côté client avant envoi de la requête de mise à jour.
-- Mise à jour des informations du service via une requête API PUT, avec gestion appropriée des réponses de succès et d'erreur.
-
-Sécurité :
-- Assurer que seul le créateur du service ou un administrateur peut modifier les informations du service.
-- Valider côté serveur les données envoyées pour la mise à jour afin d'éviter les injections SQL ou XSS.
-
-Résultat attendu :
-- En cas de succès, le service est mis à jour dans la base de données, et l'utilisateur est redirigé vers la page de détails du service avec un message de confirmation.
-- En cas d'échec (par exemple, validation des données côté serveur échouée, problème de réseau, etc.), un message d'erreur est affiché à l'utilisateur.
-*/
-
 <template>
   <div class="modify-prestation">
     <h2>Modifier la Prestation</h2>
@@ -42,7 +18,8 @@ Résultat attendu :
         <label for="status">Statut:</label>
         <select id="status" v-model="status" required>
           <option value="en attente">En attente</option>
-          <option value="en cours">En cours</option>
+          <option value="en cours">Validé</option>
+          <option value="en cours">Refusé</option>
           <option value="terminé">Terminé</option>
         </select>
       </div>
@@ -86,7 +63,7 @@ export default defineComponent({
 
     const updatePrestation = async () => {
       try {
-        const response = await fetch(`http://peer.cesi/api/service/sell/update/${soldServiceId}`, {
+        const response = await fetch(`http://peer.cesi/api/service/sell/${soldServiceId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
