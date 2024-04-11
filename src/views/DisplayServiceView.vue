@@ -30,12 +30,11 @@ Résultat attendu :
     <button v-if="isOwnerOrAdmin" @click="navigateToModifyService">Modifier le service</button>
     
     <button v-if="isOwnerOrAdmin" @click="deleteServiceConfirmation" class="delete-button">Supprimer le service</button>
-    
+    <button v-if="service && !isOwnerOrAdmin" @click="buyService">Acheter ce service</button>
   </div>
   <div v-else>
     <p>Chargement des détails du service ou service non trouvé...</p>
   </div>
-  <button v-if="service && !isOwnerOrAdmin" @click="buyService">Acheter ce service</button>
 </template>
   
 <script lang="ts">
@@ -151,6 +150,7 @@ export default defineComponent({
             }
 
           alert('Service acheté avec succès!');
+          router.push('/myorders');
         } catch (error) {
           if (error instanceof Error) {
             alert('Erreur lors de l\'achat du service: ' + error.message);

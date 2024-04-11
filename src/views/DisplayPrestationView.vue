@@ -65,7 +65,7 @@ export default defineComponent({
     }
 
     const canValidateOrRefuse = computed(() => {
-      return (userRole.value === 'presta' || userRole.value === 'admin') && soldService.value?.status === 'en attente';
+      return (userRole.value === 'presta') && soldService.value?.status === 'en attente';
     });
 
     const canModify = computed(() => {
@@ -92,19 +92,20 @@ export default defineComponent({
     });
 
     const fetchSoldServiceDetails = async () => {
-      try {
-        const soldServiceId = props.sold_service_id || route.params.sold_service_id;
-        const response = await fetch(`http://peer.cesi/api/service/sell/${soldServiceId}`);
-        if (!response.ok) {
-          throw new Error(`Erreur lors de la récupération de la prestation: ${response.status}`);
-        }
-        const data = await response.json();
-        soldService.value = data;
-      } catch (error) {
-        console.error('Erreur lors de la récupération de la prestation:', error);
-        soldService.value = null;
+    try {
+      const soldServiceId = props.sold_service_id || route.params.sold_service_id;
+      const response = await fetch(`http://peer.cesi/api/service/sell/${soldServiceId}`);
+      if (!response.ok) {
+        throw new Error(`Erreur lors de la récupération de la prestation: ${response.status}`);
       }
-    };
+      const data = await response.json();
+      data.advancement = data.advancement || 1; // S'assurer que 'advancement' a une valeur minimale de 1
+      soldService.value = data;
+    } catch (error) {
+      console.error('Erreur lors de la récupération de la prestation:', error);
+      soldService.value = null;
+    }
+  };
 
     const updateStatus = async (newStatus: 'validé' | 'refusé') => {
       try {
