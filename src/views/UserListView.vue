@@ -69,22 +69,41 @@ export default defineComponent({
 .user-list {
   display: flex;
   justify-content: space-around;
+  background-color: #f5f5f5; /* Couleur de fond plus douce */
 }
 
 .column {
   flex: 1;
   padding: 0 1rem;
+  margin: 1rem; /* Ajout de marges pour aérer */
+  background-color: #ffffff; /* Fond blanc pour chaque colonne */
+  border-radius: 8px; /* Bordures arrondies pour les colonnes */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Ombre douce pour les colonnes */
 }
 
 .user-card {
-  border: 1px solid #ccc;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  border: 1px solid #e0e0e0;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
   cursor: pointer;
-  transition: box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 5px; /* Bordures arrondies pour les cartes */
 }
 
 .user-card:hover {
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+h2 {
+  color: #333; /* Couleur plus foncée pour les titres pour une meilleure lisibilité */
+  font-family: 'Helvetica Neue', sans-serif; /* Polices modernes */
+  margin-bottom: 1rem;
+}
+
+p {
+  color: #666; /* Couleur douce pour le texte */
+  font-family: 'Arial', sans-serif;
+  line-height: 1.5; /* Espacement des lignes pour améliorer la lisibilité */
 }
 </style>

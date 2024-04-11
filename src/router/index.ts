@@ -5,6 +5,7 @@ import HomePage from "../views/HomeView.vue";
 import AccountParameterPage from '../views/ParamView.vue';
 import CreateServicePage from '../views/CreateServiceView.vue';
 import DisplayServicePage from '../views/DisplayServiceView.vue';
+import DisplayAllServicePage from '../views/DisplayServiceView.vue';
 import ModifyServicePage from '../views/ModifyServiceView.vue';
 import BoughtServicePage from "../views/BoughtServiceView.vue";
 import UserListPage from '../views/UserListView.vue';
@@ -75,6 +76,12 @@ const routes: Array<RouteRecordRaw> = [
         path: '/service/display/:service_id',
         name: 'DisplayService',
         component: DisplayServicePage,
+        props: true,
+    },
+    {
+        path: '/service/all',
+        name: 'DisplayAllServices',
+        component: DisplayAllServicePage,
         props: true,
     },
     {

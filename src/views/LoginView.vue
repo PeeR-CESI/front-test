@@ -2,7 +2,6 @@
   <div class="login-container">
     <div class="login-box">
       <img :src="logoPath" alt="Logo" class="logo"/>
-      <h2>Login</h2>
       <form @submit.prevent="login">
         <div class="form-group">
           <label for="username">Username:</label>
@@ -104,59 +103,80 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f2f2f2;
+  background-color: #f2f2f2; /* Fond léger comme sur les autres pages */
 }
 
 .login-box {
   padding: 2rem;
   border-radius: 8px;
   background-color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre douce pour correspondre aux autres formulaires */
   text-align: center;
+  width: 100%; /* Pour une adaptation mobile */
+  max-width: 600px; /* Largeur maximale pour l'alignement avec les autres pages */
 }
 
 .logo {
   width: 150px;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem; /* Espacement après le logo pour alignement */
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem; /* Espacement uniforme comme dans les autres formulaires */
 }
 
-.input {
+label {
+  margin-bottom: 0.5rem;
+  color: #30475e; /* Couleur des labels pour correspondre aux autres pages */
+}
+
+input[type="text"],
+input[type="password"] {
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.8rem;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 4px; /* Styles d'entrée pour correspondre aux autres formulaires */
 }
 
 .form-actions {
+  display: flex;
+  flex-direction: column; /* Boutons en colonne pour une meilleure disposition */
   margin-top: 1rem;
 }
 
 .btn-login,
 .btn-register {
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 2rem;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin-right: 0.5rem;
+  margin-top: 0.5rem; /* Espacement vertical entre les boutons */
+  color: #fff;
+  transition: background-color 0.3s;
 }
 
 .btn-login {
-  background-color: #0055ff;
-  color: white;
+  background-color: #30475e; /* Couleur primaire pour le bouton de connexion */
+}
+
+.btn-login:hover {
+  background-color: #1b2a49; /* Assombrissement au survol */
 }
 
 .btn-register {
-  background-color: transparent;
-  color: #0055ff;
-  border: 1px solid #0055ff;
+  background-color: #007bff; /* Bleu clair pour le bouton d'inscription */
+  color: #fff;
+  border: 1px solid #007bff; /* Bordure en bleu pour rester cohérent même au survol */
+}
+
+.btn-register:hover {
+  background-color: #0056b3; /* Assombrissement au survol pour un effet interactif */
 }
 
 .error-message {
   color: #ff0000;
-  margin-top: 1rem;
+  margin-top: 1rem; /* Style du message d'erreur pour correspondre à l'esthétique générale */
 }
 </style>

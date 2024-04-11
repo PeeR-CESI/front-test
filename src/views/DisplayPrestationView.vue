@@ -6,16 +6,21 @@
       <p><strong>Prix:</strong> {{ soldService.price }}</p>
       <p><strong>Statut:</strong> {{ soldService.status }}</p>
       <p><strong>Avancement:</strong> {{ soldService.advancement }}%</p>
-      
-      <!-- Bouton pour actions spécifiques à la prestation -->
-      <!-- Exemple : Modifier ou Supprimer la prestation, si l'utilisateur est le propriétaire ou l'admin -->
-      <button v-if="isOwnerOrAdmin" @click="modifyPrestation">Modifier la prestation</button>
-      <button v-if="isOwnerOrAdmin" @click="deletePrestationConfirmation" class="delete-button">Supprimer la prestation</button>
+  
+      <!-- Nouveaux boutons pour valider ou refuser une prestation -->
+      <button v-if="canValidateOrRefuse && soldService.status === 'en attente'" @click="updateStatus('validé')">Valider</button>
+      <button v-if="canValidateOrRefuse && soldService.status === 'en attente'" @click="updateStatus('refusé')">Refuser</button>
+  
+      <!-- Mise à jour de la condition pour le bouton Modifier -->
+      <button v-if="canModify" @click="modifyPrestation">Modifier la demande</button>
+  
+      <!-- Mise à jour de la condition pour le bouton Supprimer -->
+      <button v-if="canDelete" @click="deletePrestationConfirmation" class="delete-button">Supprimer la prestation</button>
     </div>
     <div v-else>
       <p>Chargement des détails de la prestation ou prestation non trouvée...</p>
     </div>
-</template>
+  </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, Ref, computed } from 'vue';
@@ -62,8 +67,28 @@ export default defineComponent({
       userRole.value = decoded.role;
     }
 
-    const isOwnerOrAdmin = computed(() => {
-      return soldService.value?.presta_id === userId.value || userRole.value === 'admin';
+    const canValidateOrRefuse = computed(() => {
+      return (userRole.value === 'presta' || userRole.value === 'admin') && soldService.value?.status === 'en attente';
+    });
+
+    const canModify = computed(() => {
+      if (userRole.value === 'admin') {
+        return true;
+      }
+      if (userRole.value === 'demandeur' && soldService.value?.status === 'en attente') {
+        return true;
+      }
+      return false;
+    });
+
+    const canDelete = computed(() => {
+      if (userRole.value === 'admin') {
+        return true;
+      }
+      if (userRole.value === 'demandeur' && soldService.value?.status === 'en attente') {
+        return true;
+      }
+      return false;
     });
 
     const fetchSoldServiceDetails = async () => {
@@ -81,6 +106,22 @@ export default defineComponent({
       }
     };
 
+    const updateStatus = async (newStatus: 'validé' | 'refusé') => {
+      try {
+        const response = await fetch(`http://peer.cesi/api/service/sell/${soldService.value?._id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus, advancement: soldService.value?.advancement }),
+        });
+        if (!response.ok) throw new Error('Échec de la mise à jour du statut de la prestation');
+        await fetchSoldServiceDetails(); // Rafraîchir les informations après la mise à jour
+        alert(`La prestation a été ${newStatus}.`);
+      } catch (error) {
+        console.error('Erreur lors de la mise à jour du statut:', error);
+        alert('Erreur lors de la mise à jour du statut de la prestation.');
+      }
+    };
+
     const modifyPrestation = () => {
         if (soldService.value?._id) {
             router.push({ name: 'ModifyPrestations', params: { sold_service_id: soldService.value._id } });
@@ -88,7 +129,6 @@ export default defineComponent({
             console.error("ID de la prestation vendue est manquant.");
         }
     };
-
 
     const deletePrestation = async () => {
         if (!soldService.value || !confirm('Êtes-vous sûr de vouloir supprimer cette prestation ?')) return;
@@ -138,7 +178,10 @@ export default defineComponent({
 
     return {
       soldService,
-      isOwnerOrAdmin,
+      canValidateOrRefuse,
+      canModify,
+      canDelete,
+      updateStatus,
       modifyPrestation,
       deletePrestationConfirmation: deletePrestation,
     };

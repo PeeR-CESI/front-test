@@ -1,36 +1,47 @@
 <template>
-    <div>
-      <h2>Mes Services</h2>
-      <div v-if="loading">Chargement de mes services...</div>
-      <div v-else-if="errorMessage">
-        <p>{{ errorMessage }}</p>
-      </div>
-      <div v-else-if="myServices.length">
-        <ul>
-          <!-- Ajoutez @click="navigateToService(service._id)" à chaque élément de la liste -->
-          <li v-for="service in myServices" :key="service._id" @click="navigateToService(service._id)" style="cursor: pointer;">
-            <p><strong>Nom du Service:</strong> {{ service.nom }}</p>
-            <p><strong>Description:</strong> {{ service.description }}</p>
-            <p><strong>Prix:</strong> {{ service.price }}€</p>
-          </li>
-        </ul>
-      </div>
-      <div v-else>
-        <p>Aucun service trouvé.</p>
-      </div>
+  <div>
+    <h2>Mes Services</h2>
+    <div v-if="loading">Chargement de mes services...</div>
+    <div v-else-if="errorMessage">
+      <p>{{ errorMessage }}</p>
     </div>
+    <div v-else-if="myServices.length">
+      <ul>
+        <li v-for="service in myServices" :key="service._id" @click="navigateToService(service._id)" style="cursor: pointer;">
+          <p><strong>Nom du Service:</strong> {{ service.nom }}</p>
+          <p><strong>Description:</strong> {{ service.description }}</p>
+          <p><strong>Prix:</strong> {{ service.price }}€</p>
+        </li>
+      </ul>
+    </div>
+    <div v-else>
+      <p>Aucun service trouvé.</p>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
 import router from "../router";
 
+// Fonction pour décoder le token JWT et récupérer les informations de l'utilisateur
+function decodeToken(token: string): any {
+  if (!token) return null;
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+  
+  return JSON.parse(jsonPayload);
+}
+
 interface Service {
   _id: string;
   nom: string;
   description: string;
-  price: string;
-  presta_id: number;
+  price: number;
+  presta_id: string;
 }
 
 export default defineComponent({
@@ -53,42 +64,54 @@ export default defineComponent({
         return;
       }
 
-      const userId = localStorage.getItem('user_id');
-      if (!userId) {
-        errorMessage.value = "ID utilisateur non trouvé.";
+      const decoded = decodeToken(token);
+      if (!decoded) {
+        errorMessage.value = "Impossible de décoder le token utilisateur.";
         loading.value = false;
         return;
       }
 
-      try {
-        const response = await fetch(`http://peer.cesi/api/user/find/${userId}`);
-        if (!response.ok) throw new Error('Impossible de récupérer les informations de l’utilisateur.');
-        const userData = await response.json();
+      const userRole = decoded.role;
+      const userId = decoded.user_id;
 
-        if (userData.role !== 'presta') {
-          errorMessage.value = "Accès non autorisé. Cette page est réservée aux prestataires.";
-          loading.value = false;
-          return;
+      // Les administrateurs obtiennent tous les services
+      if (userRole === 'admin') {
+        try {
+          const response = await fetch('http://peer.cesi/api/service/all');
+          if (!response.ok) throw new Error('Erreur lors de la récupération de tous les services');
+          myServices.value = await response.json();
+        } catch (error) {
+          console.error('Erreur:', error);
+          errorMessage.value = "Erreur lors de la récupération des services.";
         }
+      } else if (userRole === 'presta') {
+        // Les prestataires obtiennent uniquement leurs services
+        try {
+          const userInfoResponse = await fetch(`http://peer.cesi/api/user/find/${userId}`);
+          if (!userInfoResponse.ok) throw new Error('Impossible de récupérer les informations de l’utilisateur.');
+          const userData = await userInfoResponse.json();
 
-        const serviceIds = userData.service_ids;
-        for (const serviceId of serviceIds) {
-          const serviceResponse = await fetch(`http://peer.cesi/api/service/${serviceId}`);
-          if (!serviceResponse.ok) throw new Error('Problème lors de la récupération des détails du service.');
-          const serviceData = await serviceResponse.json();
-          myServices.value.push(serviceData);
+          const serviceIds = userData.service_ids || [];
+          for (const serviceId of serviceIds) {
+            const serviceResponse = await fetch(`http://peer.cesi/api/service/${serviceId}`);
+            if (!serviceResponse.ok) throw new Error('Problème lors de la récupération des détails du service.');
+            const serviceData = await serviceResponse.json();
+            myServices.value.push(serviceData);
+          }
+        } catch (error) {
+          console.error('Erreur:', error);
+          errorMessage.value = "Erreur lors de la récupération des services.";
         }
-      } catch (error: any) {
-        errorMessage.value = 'Erreur lors de la récupération de mes services: ' + (error.message || String(error));
-      } finally {
-        loading.value = false;
+      } else {
+        errorMessage.value = "Accès non autorisé. Cette page est réservée aux prestataires et administrateurs.";
       }
+
+      loading.value = false;
     });
 
     return { myServices, loading, errorMessage, navigateToService };
   },
 });
-
 </script>
   
   <style scoped>
