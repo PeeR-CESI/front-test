@@ -69,16 +69,16 @@ export default defineComponent({
 .user-list {
   display: flex;
   justify-content: space-around;
-  background-color: #f5f5f5; /* Couleur de fond plus douce */
+  background-color: #f5f5f5;
 }
 
 .column {
   flex: 1;
   padding: 0 1rem;
-  margin: 1rem; /* Ajout de marges pour aérer */
-  background-color: #ffffff; /* Fond blanc pour chaque colonne */
-  border-radius: 8px; /* Bordures arrondies pour les colonnes */
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Ombre douce pour les colonnes */
+  margin: 1rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .user-card {
@@ -87,7 +87,7 @@ export default defineComponent({
   margin-bottom: 1.5rem;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border-radius: 5px; /* Bordures arrondies pour les cartes */
+  border-radius: 5px;
 }
 
 .user-card:hover {
@@ -96,14 +96,14 @@ export default defineComponent({
 }
 
 h2 {
-  color: #333; /* Couleur plus foncée pour les titres pour une meilleure lisibilité */
-  font-family: 'Helvetica Neue', sans-serif; /* Polices modernes */
+  color: #333;
+  font-family: 'Helvetica Neue', sans-serif;
   margin-bottom: 1rem;
 }
 
 p {
-  color: #666; /* Couleur douce pour le texte */
+  color: #666;
   font-family: 'Arial', sans-serif;
-  line-height: 1.5; /* Espacement des lignes pour améliorer la lisibilité */
+  line-height: 1.5;
 }
 </style>

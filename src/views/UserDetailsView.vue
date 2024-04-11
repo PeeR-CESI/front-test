@@ -36,7 +36,6 @@
 import { defineComponent, onMounted, ref, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 
-// Interface pour un avis
 interface Review {
   rating: number;
   comment: string;
@@ -151,7 +150,7 @@ select {
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 100%;
-  margin-bottom: 1rem; /* Assurez-vous que l'espacement est cohérent */
+  margin-bottom: 1rem;
 }
 
 button {

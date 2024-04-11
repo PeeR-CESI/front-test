@@ -56,7 +56,7 @@ export default defineComponent({
     const userId = ref('');
     const userRole = ref('');
 
-    // Utiliser le token pour définir userId et userRole
+
     const token = localStorage.getItem('access_token');
     if (token) {
       const decoded = decodeToken(token);
@@ -69,15 +69,12 @@ export default defineComponent({
     });
 
     const canModify = computed(() => {
-      // Permettre à l'admin de toujours modifier
       if (userRole.value === 'admin') {
         return true;
       }
-      // Permettre au demandeur de modifier si la prestation est en attente
       if (userRole.value === 'demandeur' && soldService.value?.status === 'en attente') {
         return true;
       }
-      // Ajouter une condition pour le prestataire pour modifier si le statut est validé ou en cours
       if (userRole.value === 'presta' && (soldService.value?.status === 'validé' || soldService.value?.status === 'en cours')) {
         return true;
       }
@@ -117,7 +114,7 @@ export default defineComponent({
           body: JSON.stringify({ status: newStatus, advancement: soldService.value?.advancement }),
         });
         if (!response.ok) throw new Error('Échec de la mise à jour du statut de la prestation');
-        await fetchSoldServiceDetails(); // Rafraîchir les informations après la mise à jour
+        await fetchSoldServiceDetails();
         alert(`La prestation a été ${newStatus}.`);
       } catch (error) {
         console.error('Erreur lors de la mise à jour du statut:', error);
@@ -137,22 +134,19 @@ export default defineComponent({
         if (!soldService.value || !confirm('Êtes-vous sûr de vouloir supprimer cette prestation ?')) return;
         
         try {
-            // Suppression de la prestation
             const deleteResponse = await fetch(`http://peer.cesi/api/service/sell/${soldService.value._id}`, {
             method: 'DELETE'
             });
             if (!deleteResponse.ok) throw new Error('Erreur lors de la suppression de la prestation');
 
-            // Suppression du sold_service_id de la liste du prestataire
             await removeSoldServiceId(soldService.value.presta_id, soldService.value._id);
 
-            // Suppression du sold_service_id de la liste du demandeur
             if (soldService.value.demandeur_id) {
             await removeSoldServiceId(soldService.value.demandeur_id, soldService.value._id);
             }
 
             alert('Prestation supprimée avec succès.');
-            router.push('/myprestations'); // Rediriger vers l'accueil ou une autre page appropriée
+            router.push('/myprestations');
         } catch (error) {
             if (error instanceof Error) {
             alert('Erreur lors de la suppression de la prestation: ' + error.message);
@@ -161,7 +155,6 @@ export default defineComponent({
             }
         }
         };
-    // Fonction pour supprimer le sold_service_id des sold_service_ids de l'utilisateur (prestataire ou demandeur)
     async function removeSoldServiceId(userId: string, soldServiceId: string) {
         const userResponse = await fetch(`http://peer.cesi/api/user/find/${userId}`);
         if (!userResponse.ok) throw new Error('Erreur lors de la récupération des infos de l’utilisateur.');
@@ -194,7 +187,6 @@ export default defineComponent({
 
 
 <style scoped>
-/* Conteneur principal pour un alignement centré et un design épuré */
 div {
   max-width: 800px;
   margin: 20px auto;
@@ -205,26 +197,22 @@ div {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Style des titres pour plus de visibilité */
 h2 {
   color: #333;
   text-align: center;
   margin-bottom: 20px;
 }
 
-/* Amélioration de la lisibilité du texte */
 p {
   color: #666;
   line-height: 1.6;
   margin: 10px 0;
 }
 
-/* Mise en évidence des éléments clés */
 strong {
   color: #333;
 }
 
-/* Style des boutons pour une meilleure interaction utilisateur */
 button {
   background-color: #007bff;
   color: white;
@@ -233,15 +221,14 @@ button {
   padding: 10px 15px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-top: 10px; /* Espacement au-dessus des boutons */
+  margin-top: 10px;
 }
-/* Style spécifique pour le bouton supprimer */
 .delete-button {
-  background-color: #dc3545; /* Rouge par défaut pour le bouton Supprimer */
+  background-color: #dc3545;
 }
 
 .delete-button:hover {
-  background-color: #c82333; /* Rouge plus foncé au survol */
+  background-color: #c82333;
 }
 
 button:hover {

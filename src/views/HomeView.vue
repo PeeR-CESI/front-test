@@ -1,7 +1,6 @@
 <template>
   <div class="home">
     <h1>Bienvenue, {{ username }}</h1>
-    <!-- Bouton visible uniquement pour les utilisateurs "presta" -->
     <button v-if="role === 'presta'" class="create-service-button" @click="goToCreateService">Créer un service</button>
     <h2>Retrouvez ici quelques services proposés par la communauté :</h2>
     <div class="services-container">
@@ -27,7 +26,6 @@ import { defineComponent, computed, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import serviceImage from '../assets/bureau.jpg';
 
-// Définir l'interface pour un service
 interface Service {
   _id: number;
   nom: string;
@@ -40,7 +38,7 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const username = computed(() => localStorage.getItem('username'));
-    const services = ref<Service[]>([]); // Utiliser l'interface Service ici
+    const services = ref<Service[]>([]);
     const role = computed(() => localStorage.getItem('role'));
 
     const navigateToService = (id: number) => {
@@ -52,7 +50,7 @@ export default defineComponent({
     };
 
     const goToUserList = () => {
-      router.push('/user-list'); // Assurez-vous que le chemin correspond à celui défini dans le router
+      router.push('/user-list');
     };
 
     onMounted(async () => {
@@ -68,11 +66,9 @@ export default defineComponent({
     });
 
     const logout = () => {
-      // Supprimez le token et d'autres données de l'utilisateur stockées localement
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
       localStorage.removeItem('username');
-      // Redirigez l'utilisateur vers la page de connexion
       router.push('/login');
     };
 
@@ -96,7 +92,6 @@ export default defineComponent({
           throw new Error('Erreur lors de l\'envoi de l\'email');
         }
 
-        // Réinitialisation pour fermer le pop-up et nettoyer le champ email
         showSponsorModal.value = false;
         sponsorEmail.value = '';
 
@@ -127,7 +122,6 @@ export default defineComponent({
 
 <style scoped>
 .modal {
-  /* Style de base pour le pop-up, à ajuster selon vos besoins */
   position: fixed;
   top: 50%;
   left: 50%;
@@ -152,7 +146,7 @@ export default defineComponent({
 }
 
 .service-image img {
-  width: 100%; /* Ajustez comme nécessaire */
+  width: 100%;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
@@ -171,7 +165,7 @@ export default defineComponent({
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 1rem;
-  width: calc(20% - 1rem); /* Ajuster en fonction de la largeur de la carte */
+  width: calc(20% - 1rem);
 }
 
 .price {
@@ -180,19 +174,19 @@ export default defineComponent({
 }
 
 .create-service-button {
-  background-color: white; /* Fond blanc ou toute autre couleur appropriée */
-  color: #4CAF50; /* Couleur verte pour le texte, ajustable selon le besoin */
-  border: 2px solid #4CAF50; /* Bordure verte */
+  background-color: white;
+  color: #4CAF50;
+  border: 2px solid #4CAF50;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
-  margin-top: 20px; /* Espace au-dessus du bouton */
-  transition: background-color 0.3s, color 0.3s; /* Animation de transition */
+  margin-top: 20px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .create-service-button:hover {
-  background-color: #4CAF50; /* Couleur de fond lors du survol */
-  color: white; /* Couleur du texte lors du survol */
+  background-color: #4CAF50;
+  color: white;
 }
 </style>

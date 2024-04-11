@@ -51,7 +51,7 @@ export default defineComponent({
   setup() {
     const nom = ref('');
     const description = ref('');
-    const price = ref(''); // Ajout de la référence pour le prix
+    const price = ref('');
     const route = useRoute();
     const router = useRouter();
     const serviceId = route.params.service_id;
@@ -62,7 +62,7 @@ export default defineComponent({
         const data = await response.json();
         nom.value = data.nom;
         description.value = data.description;
-        price.value = data.price; // Récupération du prix
+        price.value = data.price;
       } else {
         console.error('Erreur lors de la récupération du service');
       }
@@ -78,7 +78,7 @@ export default defineComponent({
           body: JSON.stringify({
             nom: nom.value,
             description: description.value,
-            price: price.value, // Envoi du prix modifié
+            price: price.value,
           }),
         });
 
@@ -101,7 +101,7 @@ export default defineComponent({
     return {
       nom,
       description,
-      price, // Exposition de la référence pour le prix
+      price,
       updateService,
     };
   },
@@ -119,7 +119,7 @@ export default defineComponent({
 }
 
 .modify-service h2 {
-  color: #30475e; /* Conserve la même couleur de titre */
+  color: #30475e;
   margin-bottom: 1.5rem;
   text-align: center;
 }
@@ -137,7 +137,7 @@ form > div {
 
 label {
   margin-bottom: .5rem;
-  color: #30475e; /* Assortir la couleur du label */
+  color: #30475e;
 }
 
 input[type="text"],
@@ -147,7 +147,7 @@ select {
   padding: .8rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: 100%; /* Assurer l'alignement et la largeur uniforme des champs */
+  width: 100%;
 }
 
 .form-group {
@@ -158,20 +158,20 @@ select {
 
 .form-group label {
   flex-basis: 20%;
-  margin-bottom: 0; /* Ajuster la marge pour l'alignement */
+  margin-bottom: 0;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-  flex-basis: 75%; /* Ajuster la largeur pour l'alignement */
+  flex-basis: 75%;
 }
 
 button {
   padding: .8rem 2rem;
   margin-top: .5rem;
   color: #fff;
-  background-color: #30475e; /* Style du bouton uniforme */
+  background-color: #30475e;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -179,6 +179,6 @@ button {
 }
 
 button:hover {
-  background-color: #1b2a49; /* Effet au survol pour le bouton */
+  background-color: #1b2a49;
 }
 </style>

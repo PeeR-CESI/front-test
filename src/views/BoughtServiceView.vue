@@ -125,7 +125,6 @@ export default defineComponent({
           const soldServiceResponse = await fetch(`http://peer.cesi/api/service/sell/${soldServiceId}`);
           if (soldServiceResponse.ok) {
             const soldServiceData = await soldServiceResponse.json();
-            // Pas besoin de récupérer les détails du service de base séparément
             const prestaResponse = await fetch(`http://peer.cesi/api/user/find/${soldServiceData.presta_id}`);
             if (prestaResponse.ok) {
               const prestaData = await prestaResponse.json();
