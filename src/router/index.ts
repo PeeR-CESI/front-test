@@ -5,7 +5,6 @@ import HomePage from "../views/HomeView.vue";
 import AccountParameterPage from '../views/ParamView.vue';
 import CreateServicePage from '../views/CreateServiceView.vue';
 import DisplayServicePage from '../views/DisplayServiceView.vue';
-import DisplayAllServicePage from '../views/DisplayServiceView.vue';
 import ModifyServicePage from '../views/ModifyServiceView.vue';
 import BoughtServicePage from "../views/BoughtServiceView.vue";
 import UserListPage from '../views/UserListView.vue';
@@ -15,6 +14,7 @@ import MyServicesPage from "../views/MyServicesView.vue";
 import ForumPage from "../views/ForumView.vue";
 import ModifyPrestationsPage from "../views/ModifyPrestationView.vue";
 import DisplayPrestationsPage from "../views/DisplayPrestationView.vue";
+import StatisticsPage from "../views/StatisticsView.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -56,16 +56,11 @@ const routes: Array<RouteRecordRaw> = [
             }
         },
     },
-    // {
-    //     path: '/admin/statistics', // Redirige les admins vers la page de statistiques d'utilisation de la plateforme
-    //     name: 'Statistics',
-    //     component: StatisticsPage,
-    // },
-    // {
-    //     path: '/dev/components', // le but ici c'est d'avoir le lien qui redirige vers les swaggers API
-    //     name: 'API',
-    //     component: APIPage,
-    // },
+    {
+        path: '/admin/statistics', // Redirige les admins vers la page de statistiques d'utilisation de la plateforme
+        name: 'Statistics',
+        component: StatisticsPage,
+    },
     {
         path: '/service/create',
         name: 'ServiceCreate',
@@ -76,12 +71,6 @@ const routes: Array<RouteRecordRaw> = [
         path: '/service/display/:service_id',
         name: 'DisplayService',
         component: DisplayServicePage,
-        props: true,
-    },
-    {
-        path: '/service/all',
-        name: 'DisplayAllServices',
-        component: DisplayAllServicePage,
         props: true,
     },
     {

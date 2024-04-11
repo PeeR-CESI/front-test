@@ -24,8 +24,14 @@
         </select>
       </div>
       <div>
-        <label for="advancement">Avancement (%):</label>
-        <input id="advancement" v-model="advancement" type="number" min="0" max="100" required>
+        <label for="advancement">Avancement:</label>
+        <select id="advancement" v-model="advancement" required>
+          <option value="1">1 - En attente</option>
+          <option value="2">2 - En cours</option>
+          <option value="3">3 - Avancé</option>
+          <option value="4">4 - Presque terminé</option>
+          <option value="5">5 - Terminé</option>
+        </select>
       </div>
       <button type="submit">Mettre à jour la prestation</button>
     </form>
@@ -33,7 +39,7 @@
 </template>
   
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 export default defineComponent({
@@ -42,7 +48,7 @@ export default defineComponent({
     const description = ref('');
     const price = ref(0);
     const status = ref('');
-    const advancement = ref(0);
+    const advancement = ref(1); // Initialisé à 1 pour correspondre à nos nouvelles options
     const router = useRouter();
     const route = useRoute();
     const soldServiceId = route.params.sold_service_id;
@@ -60,6 +66,21 @@ export default defineComponent({
         console.error('Erreur lors de la récupération de la prestation');
       }
     };
+
+    watch(advancement, (newValue) => {
+      // Ajustement automatique du statut en fonction de l'avancement
+      switch (newValue) {
+        case 1:
+          status.value = 'en attente';
+          break;
+        case 5:
+          status.value = 'terminé';
+          break;
+        default:
+          // Pas de mise à jour du statut pour les autres valeurs
+          break;
+      }
+    });
 
     const updatePrestation = async () => {
       try {

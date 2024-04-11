@@ -12,7 +12,7 @@
           <p><strong>Description:</strong> {{ soldService.description }}</p>
           <p><strong>Prix:</strong> {{ soldService.price }}</p>
           <p><strong>Avancement:</strong> {{ soldService.advancement }}%</p>
-          <p><strong>Statut:</strong> {{ soldService.status }}</p> <!-- Ajoutez cette ligne -->
+          <p><strong>Statut:</strong> {{ soldService.status }}</p>
           <p><strong>ID du Service Vendu:</strong> {{ soldService._id }}</p>
         </li>
       </ul>
@@ -58,7 +58,7 @@ export default defineComponent({
     const userRole = ref(decodedTokenData.role || '');
 
     const pageTitle = computed(() => {
-      return userRole.value === 'admin' ? 'Tous les services' : 'Mes prestations';
+      return userRole.value === 'admin' ? 'Toutes les prestations' : 'Mes prestations';
     });
 
     const navigateToServiceDetails = (soldServiceId: string) => {

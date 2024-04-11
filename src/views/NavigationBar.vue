@@ -14,6 +14,8 @@
         <button v-if="userRole === 'presta'" @click="navigateToMyPrestations">Mes prestations</button>
         <button v-if="userRole === 'admin'" @click="navigateToServicesAdministrations">Administration des services</button>
         <button v-if="userRole === 'admin'" @click="navigateToPrestationsAdministrations">Administration des prestations</button>
+        <!-- Bouton pour accéder aux statistiques visible uniquement pour l'admin -->
+        <button v-if="userRole === 'admin'" @click="navigateToStatistics">Statistiques</button>
         <button v-if="userRole === 'dev'" @click="navigateToMyPrestations">Mes prestations</button>
         <button @click="logout">Déconnexion</button>
       </div>
@@ -65,6 +67,11 @@ export default defineComponent({
       router.push('/myprestations');
     };
 
+    // Méthode pour naviguer vers la page des statistiques
+    const navigateToStatistics = () => {
+      router.push('/admin/statistics');
+    };
+
     const dropdownVisible = ref(false);
     const toggleDropdown = () => {
       dropdownVisible.value = !dropdownVisible.value;
@@ -82,12 +89,11 @@ export default defineComponent({
     };
 
     const navigateToForum = () => {
-      // Remplacez par le chemin réel vers la page du forum lorsque prêt
       router.push('/forum');
     };
 
     const logout = () => {
-      localStorage.clear(); // Supprime tous les éléments stockés dans localStorage
+      localStorage.clear();
       router.push('/login');
     };
 
@@ -133,6 +139,7 @@ export default defineComponent({
       navigateToMyPrestations,
       navigateToServicesAdministrations,
       navigateToPrestationsAdministrations,
+      navigateToStatistics,
       userRole
     };
   },
