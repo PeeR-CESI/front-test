@@ -1,7 +1,7 @@
 <template>
-  <div class="user-details">
-    <h1>Détails de l'utilisateur: {{ presta }}</h1>
-    <h3>Note moyenne: {{ average_rating.toFixed(1) }}</h3>
+  <div class="user-details settings">
+    <h2>Nom de l'utilisateur : {{ presta }}</h2>
+    <h3>Note moyenne : {{ average_rating.toFixed(1) }}</h3>
     <div class="reviews">
       <h2>Avis</h2>
       <div class="review-card" v-for="(review, index) in reviews" :key="index">
@@ -101,6 +101,73 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.add-review { margin-top: 2rem; }
-.review-card { border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem; }
+.user-details {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-details h2, .user-details h3 {
+  color: #30475e;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.add-review, .reviews {
+  width: 100%;
+}
+
+.review-card {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+}
+
+form {
+  width: 100%;
+}
+
+div:not(.buttons) {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+label {
+  margin-bottom: .5rem;
+  color: #30475e;
+}
+
+input[type="text"],
+select {
+  padding: .8rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  margin-bottom: 1rem; /* Assurez-vous que l'espacement est cohérent */
+}
+
+button {
+  padding: .8rem 2rem;
+  margin: .5rem 0;
+  color: #fff;
+  background-color: #30475e;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%; /* Bouton en pleine largeur */
+}
+
+button:hover {
+  background-color: #1b2a49;
+}
 </style>
+

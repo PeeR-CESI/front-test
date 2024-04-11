@@ -200,7 +200,7 @@ export default defineComponent({
           if (!updateResponse.ok) throw new Error('Erreur lors de la mise à jour du prestataire.');
 
           alert('Service supprimé avec succès.');
-          router.push('/home');
+          router.push('/myservices');
         } catch (error) {
           console.error(error);
           alert('Erreur lors de la suppression du service.');

@@ -33,8 +33,10 @@
         <label for="password">Nouveau mot de passe:</label>
         <input id="password" v-model="user.password" type="password" placeholder="Nouveau mot de passe">
       </div>
-      <button type="submit">Mettre à jour</button>
-      <button @click="confirmAccountDeletion">Supprimer mon compte</button>
+      <div class="buttons">
+        <button type="submit">Mettre à jour</button>
+        <button @click="confirmAccountDeletion">Supprimer mon compte</button>
+      </div>
     </form>
   </div>
 </template>
@@ -126,17 +128,26 @@ export default defineComponent({
   background: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .settings h2 {
-  color: #30475e; /* A similar blue to the one in the second image */
+  color: #30475e;
   margin-bottom: 1.5rem;
   text-align: center;
 }
 
 form {
+  width: 100%;
+}
+
+div:not(.buttons) {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  margin-bottom: 1rem;
 }
 
 label {
@@ -149,31 +160,38 @@ input[type="email"],
 input[type="password"],
 select {
   padding: .8rem;
-  margin-bottom: 1.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
+  width: 100%;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column; /* Changez à la disposition en colonne pour l'alignement vertical */
 }
 
 button {
   padding: .8rem 2rem;
-  margin: .5rem 0;
+  margin: .5rem 0 0 0; /* Ajustez la marge pour supprimer l'espace à gauche du premier bouton et entre les boutons */
   color: #fff;
-  background-color: #30475e; /* Button color to match the second image */
+  background-color: #30475e;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
+  width: 100%; /* Les boutons s'étendent à la pleine largeur */
 }
 
 button:hover {
-  background-color: #1b2a49; /* Darken the button on hover */
+  background-color: #1b2a49;
 }
 
 button:last-child {
-  background-color: #f05454; /* Red color for the delete button */
+  background-color: #f05454;
 }
 
 button:last-child:hover {
-  background-color: #c04848; /* Darken the delete button on hover */
+  background-color: #c04848;
 }
+
 </style>

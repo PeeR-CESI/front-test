@@ -1,6 +1,6 @@
 <template>
   <div class="modify-prestation">
-    <h2>Modifier la Prestation</h2>
+    <h2>Modifier vos Prestations</h2>
     <form @submit.prevent="updatePrestation">
       <div>
         <label for="name">Nom de la prestation:</label>
@@ -107,10 +107,19 @@ export default defineComponent({
 
   
 <style scoped>
-.modify-service {
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 20px;
+.modify-prestation {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.modify-prestation h2 {
+  color: #30475e; /* Conserve la couleur similaire à celle de l'exemple */
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 
 form {
@@ -119,32 +128,58 @@ form {
 }
 
 form > div {
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
 }
 
 label {
-  margin-bottom: 5px;
-  display: block;
+  margin-bottom: .5rem;
+  color: #30475e; /* Assortir la couleur du texte à celle de l'exemple */
 }
 
 input[type="text"],
-textarea {
-  width: 100%;
-  padding: 8px;
+textarea,
+input[type="number"],
+select {
+  padding: .8rem;
   border: 1px solid #ccc;
   border-radius: 4px;
+  /* Alignement des éléments pour qu'ils aient la même largeur */
+  width: 100%;
+}
+
+/* Alignement des champs de formulaire pour éviter tout décalage */
+.form-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-group label {
+  /* Ajustement pour que les labels ne prennent pas toute la largeur et permettent l'alignement des champs */
+  flex-basis: 20%;
+  margin-bottom: 0; /* Enlève la marge pour aligner avec le champ de saisie */
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  flex-basis: 75%; /* Ajuste la largeur des champs de saisie */
 }
 
 button {
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
+  padding: .8rem 2rem;
+  margin-top: .5rem;
+  color: #fff;
+  background-color: #30475e; /* Assortir la couleur du bouton à celle de l'exemple */
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #1b2a49; /* Assombrir le bouton au survol */
 }
 </style>

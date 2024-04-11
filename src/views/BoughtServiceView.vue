@@ -1,3 +1,4 @@
+code à adapter : 
 /*
 Vue "Services Achetés" :
 - Cette vue est conçue pour les utilisateurs ayant le rôle de "demandeur". Elle affiche une liste des services que l'utilisateur a achetés précédemment.
@@ -22,14 +23,14 @@ Résultat attendu :
 
 <template>
   <div>
-    <h2>Services Achetés</h2>
+    <h2>Mes commandes</h2>
     <div v-if="loading">Chargement des services...</div>
     <div v-else-if="errorMessage">
       <p>{{ errorMessage }}</p>
     </div>
     <div v-else-if="services.length">
       <ul>
-        <li v-for="service in services" :key="service._id">
+        <li v-for="service in services" :key="service._id" @click="navigateToService(service._id)" style="cursor: pointer;">
           <p><strong>Nom du Service:</strong> {{ service.nom }}</p>
           <p><strong>Description:</strong> {{ service.description }}</p>
           <p><strong>Prix:</strong> {{ service.price }}</p>
@@ -81,6 +82,10 @@ export default defineComponent({
     const loading = ref(true);
     const errorMessage = ref('');
 
+    const navigateToService = (serviceId: string) => {
+      router.push({ name: 'DisplayPrestations', params: { sold_service_id: serviceId } });
+    };
+
     onMounted(async () => {
       const token = localStorage.getItem('access_token');
       if (!token) {
@@ -89,7 +94,6 @@ export default defineComponent({
         router.push('/login');
         return;
       }
-
       const decoded = decodeToken(token);
       if (decoded.role !== 'demandeur') {
         errorMessage.value = "Accès non autorisé. Cette page est réservée aux demandeurs.";
@@ -147,7 +151,7 @@ export default defineComponent({
       }
     });
 
-    return { services, loading, errorMessage };
+    return { services, loading, errorMessage, navigateToService };
   },
 });
 </script>

@@ -12,6 +12,9 @@
         <button v-if="userRole === 'demandeur'" @click="navigateToMyOrders">Mes commandes</button>
         <button v-if="userRole === 'presta'" @click="navigateToMyServices">Mes Services</button>
         <button v-if="userRole === 'presta'" @click="navigateToMyPrestations">Mes prestations</button>
+        <button v-if="userRole === 'admin'" @click="navigateToServicesAdministrations">Administration des services</button>
+        <button v-if="userRole === 'admin'" @click="navigateToPrestationsAdministrations">Administration des prestations</button>
+        <button v-if="userRole === 'dev'" @click="navigateToMyPrestations">Mes prestations</button>
         <button @click="logout">Déconnexion</button>
       </div>
     </div>
@@ -51,6 +54,14 @@ export default defineComponent({
     };
 
     const navigateToMyPrestations = () => {
+      router.push('/myprestations');
+    };
+
+    const navigateToServicesAdministrations = () => {
+      router.push('/myservices');
+    };
+
+    const navigateToPrestationsAdministrations = () => {
       router.push('/myprestations');
     };
 
@@ -120,6 +131,8 @@ export default defineComponent({
       navigateToMyOrders,
       navigateToMyServices,
       navigateToMyPrestations,
+      navigateToServicesAdministrations,
+      navigateToPrestationsAdministrations,
       userRole
     };
   },
@@ -143,11 +156,12 @@ export default defineComponent({
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1050;
 }
 
 .logo {
-  height: 40px; /* Taille du logo plus petite */
+  height: 50px;
   cursor: pointer;
 }
 
@@ -155,6 +169,8 @@ export default defineComponent({
   flex-grow: 1;
   margin: 0 1rem;
   padding: 0.5rem;
+  border: 1px solid #ccc; /* Ajout d'une bordure pour définir clairement la zone de recherche */
+  border-radius: 4px; /* Bordures arrondies pour la barre de recherche */
 }
 
 .navbar-menu {
@@ -168,33 +184,52 @@ export default defineComponent({
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
+  color: #000000; /* Texte noir pour contraster avec le fond */
 }
 
 .dropdown-content {
-  /* Pas de 'display: none;' ici car v-show s'en occupe */
+  display: flex;
+  flex-direction: column; /* Orientation verticale des éléments */
   position: absolute;
   right: 1rem;
-  top: 48px; /* ajuster selon la hauteur de votre barre de navigation */
+  top: 48px;
   background-color: #f9f9f9;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  padding: 12px 16px;
+  padding: 0; /* Enlever le padding ici pour permettre aux séparateurs de s'étendre sur toute la largeur */
   z-index: 1;
+  border-radius: 8px; /* Bordures arrondies pour le menu */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-20px);
+  transition: all 0.3s ease; /* Transition douce pour l'apparition */
+  z-index: 1050;
 }
 
-.dropdown-content.show {
-  display: block; /* afficher lorsque le menu est activé */
+.navbar-menu:hover .dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
 .dropdown-content button {
   text-align: left;
+  font-size: 1rem;
   background: none;
   border: none;
-  padding: 10px;
+  padding: 10px 20px; /* Ajout d'un padding horizontal pour aligner le texte */
   width: 100%;
   cursor: pointer;
+  color: #333;
+  white-space: nowrap; /* Empêche le retour à la ligne du texte */
+  border-bottom: 1px solid #ddd; /* Ajoute des séparateurs entre les boutons */
+  transition: background-color 0.2s; /* Effet de survol plus réactif */
 }
 
 .dropdown-content button:hover {
-  background-color: #f1f1f1;
+  background-color: #ddd; /* Couleur de fond plus claire au survol */
+}
+
+.dropdown-content button:last-child {
+  border-bottom: none; /* Enlève le séparateur du dernier élément */
 }
 </style>

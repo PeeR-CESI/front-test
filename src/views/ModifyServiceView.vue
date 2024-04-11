@@ -24,7 +24,7 @@ Résultat attendu :
 
 <template>
     <div class="modify-service">
-      <h2>Modifier le Service</h2>
+      <h2>Modifier vos Services</h2>
       <form @submit.prevent="updateService">
         <div>
           <label for="nom">Nom du service:</label>
@@ -100,11 +100,19 @@ Résultat attendu :
   });
   </script>
   
-  <style scoped>
-  .modify-service {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
+<style scoped>.modify-service {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .modify-service h2 {
+    color: #30475e; /* Utilisez la même couleur de titre que celle de la page des prestations */
+    margin-bottom: 1.5rem;
+    text-align: center;
   }
   
   form {
@@ -113,33 +121,38 @@ Résultat attendu :
   }
   
   form > div {
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
   }
   
   label {
-    margin-bottom: 5px;
-    display: block;
+    margin-bottom: .5rem;
+    color: #30475e; /* Assortir la couleur du label à celle de la page des prestations */
   }
   
   input[type="text"],
   textarea {
-    width: 100%;
-    padding: 8px;
+    padding: .8rem;
     border: 1px solid #ccc;
     border-radius: 4px;
+    width: 100%; /* Assurez-vous que les champs de saisie s'étendent à la largeur complète */
   }
   
   button {
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
+    padding: .8rem 2rem;
+    margin-top: .5rem; /* Ajuster la marge supérieure pour correspondre à celle de la page des prestations */
+    color: #fff;
+    background-color: #30475e; /* Assortir la couleur du bouton à celle de la page des prestations */
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s;
   }
   
   button:hover {
-    background-color: #0056b3;
+    background-color: #1b2a49; /* Assombrir le bouton au survol, comme sur la page des prestations */
   }
-  </style>
+  
+</style>
   
